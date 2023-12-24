@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name=""viewport""
+            content=""target-densitydpi"
+            ="320,width"
+            ="640,user-scalable"
+            ="no""
+        />
+        <title>Document</title>
+        <script type="module" src="./js/GLTFLoader.js"></script>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            /*这里设置margin:0; 和overflow:hidden; 能够保证移除全部的滚动条*/
+        </style>
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="preconnect" href="https://fonts.proxy.ustclug.org">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.proxy.ustclug.org/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
+
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="top"><span>Developing Verison Alpha 0.1.5</span></div>
+        <div id="loading">
+            <svg
+                class="spinner"
+                width="65px"
+                height="65px"
+                viewBox="0 0 66 66"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <circle
+                    class="path"
+                    fill="none"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                    cx="33"
+                    cy="33"
+                    r="30"
+                ></circle>
+            </svg>
+            <div id="modelloading" style="margin-top: 20px;--progress: 0%" class="g-progress" >
+              <span class='leftText'>模型加载</span>
+              <span class='rightText' id="modelloadingtext">0%</span>
+            </div>
+            <div id="picloading" style="margin-top: 10px;--progress: 0%" class="g-progress">
+                <span class='leftText'>图片加载</span>
+                <span class='rightText'id="picloadingtext" >0%</span>
+            </div>
+        </div>
+        <style>
+        </style>
+        <canvas id="maincav"></canvas>
+        <!-- <canvas id="screen1left"></canvas> -->
+        <script type="module" src="/js/3dScene.js"></script>
+
+        <button id="left">←</button>
+        <button id="right">→</button>
+        <button id="forward">↑</button>
+        <button id="backward">↓</button>
+    </body>
+</html>
