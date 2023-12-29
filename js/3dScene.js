@@ -48,6 +48,7 @@ function fadeOut(elemt, speed) {
         elemt.style.opacity = num / 20;
         if (num <= 0) {
             clearInterval(timer);
+            elemt.remove();
         }
     }, speed);
 }
@@ -155,6 +156,7 @@ function onloading() {
             document
                 .getElementById("modelloading")
                 .style.setProperty("--progress", "100%");
+            isFinishModel=1;
         },
         function (xhr) {},
         function (error) {
@@ -253,6 +255,13 @@ function onloading() {
     scene.add(directionalLight);
     animate(renderer, scene, camera);
     //Canvas
-    let cpt=new CANTOL.CanvasCanvasPainter(1,4,'/static/img/1/info.json')
+    let cpt=new CANTOL.CanvasPainter(1,4,'/static/img/1/info.json')
+    cpt.loadImg()
+    var loopLoadingScan = setInterval(() => {
+        if(cpt.isLoadingFinish&&isFinishModel){
+            fadeOut(document.getElementById("loading"),16);
+            clearInterval(loopLoadingScan)
+        }
+    }, 100);
 }
 window.onload = onloading;
