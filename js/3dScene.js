@@ -142,9 +142,9 @@ function onloading() {
     //3D Model Load and display
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
 
     // Load the GLTF model
+    var isFinishModel=0;
     const loader = new GLTFLoader();
     loader.load(
         "./static/model/model.gltf",
@@ -252,19 +252,7 @@ function onloading() {
     directionalLight.position.set(0, 0, 1);
     scene.add(directionalLight);
     animate(renderer, scene, camera);
-    console.log("[Three.js] ready");
     //Canvas
-    CANTOL.loadImg(1, 10);
-    // var tmpsync = setInterval(function () {
-    //     if (
-    //         document.getElementById("picloadingtext").innerText == "100%" &&
-    //         document.getElementById("modelloadingtext").innerText == "100%"
-    //     ) {
-    //         fadeOut(document.getElementById("loading"), 0);
-    //         // document.body.removeChild(document.getElementById("loading"));
-    //         clearInterval(tmpsync);
-    //     }
-    // }, 10);
-    console.log(tmpsync);
+    let cpt=new CANTOL.CanvasCanvasPainter(1,4,'/static/img/1/info.json')
 }
 window.onload = onloading;
