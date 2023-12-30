@@ -266,7 +266,6 @@ export function onloading(CONFIG) {
     cpt.loadImg();
     var loopLoadingScan = setInterval(() => {
         if (cpt.isLoadingFinish && isFinishModel&&!CONFIG.isStopAtLoadingPage) {
-            sleep(500);
             fadeOut(document.getElementById("loading"), 16);
             clearInterval(loopLoadingScan);
         }
