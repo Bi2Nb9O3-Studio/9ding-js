@@ -262,7 +262,7 @@ export function onloading(CONFIG) {
     scene.add(directionalLight);
     animate(renderer, scene, camera);
     //Canvas
-    let cpt = new CANTOL.CanvasPainter(1, 4, "/static/img/1/info.json");
+    let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
     cpt.loadImg();
     var loopLoadingScan = setInterval(() => {
         if (cpt.isLoadingFinish && isFinishModel&&!CONFIG.isStopAtLoadingPage) {

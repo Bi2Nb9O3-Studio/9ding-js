@@ -1,3 +1,17 @@
+@font-face {
+    font-family: "Source Han Sans Medium";
+    src: url("../assets/fonts/Source\ Han\ Sans\ CN\ Normal.otf");
+}
+
+@font-face {
+    font-family: "Source Han Sans Bold";
+    src: url("../assets/fonts/Source\ Han\ Sans\ CN\ Bold.otf");
+}
+
+body {
+    font-family: "Source Han Sans Medium";
+}
+
 #left,
 #right {
     display: block;
@@ -40,37 +54,43 @@
 }
 @property --progress {
     syntax: "<percentage>";
-    inherits: false;
+    inherits: true;
     initial-value: 0%;
 }
-
 .g-progress {
-    width: 240px;
-    height: 25px;
-    border-radius: 25px;
-    background: linear-gradient(
-        90deg,
-        #0f0,
-        #0ff var(--progress),
-        transparent 0
-    );
-    border: 1px solid #eee;
-    transition: 0.3s --progress;
+    display: flex;
+    margin: 30px;
+    width: 20vw;
+    height: 20px;
+    position: relative;
 }
 
 .leftText {
-    position: relative;
-    left: 10px;
-    top: 3px;
+    position: absolute;
+    left: 0px;
 }
 
 .rightText {
-    position: relative;
-    right: -130px;
-    top: 3px;
+    position: absolute;
+    right: 0px;
 }
 
-#top{
+.g-progress::before {
+    content: "";
+    position: absolute;
+    height: 25%;
+    width: var(--progress, 0%);
+    bottom: -7px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #4caf50, #ff9800);
+    transition: 0.3s --progress;
+}
+
+#modelloading {
+    margin-top: 70px;
+}
+
+#top {
     width: 100vw;
     display: flex;
     justify-content: center;
@@ -113,8 +133,7 @@
     stroke-dasharray: 187;
     stroke-dashoffset: 0;
     transform-origin: center;
-    animation: dash 1.4s ease-in-out infinite,
-        colors 5.6s ease-in-out infinite;
+    animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
 }
 
 @keyframes colors {
@@ -149,7 +168,7 @@
     }
 }
 
-#logging{
+#logging {
     display: block;
     position: absolute;
     bottom: 0;
@@ -158,7 +177,7 @@
     height: 30vh;
 }
 
-#loggingta{
+#loggingta {
     width: 100%;
     height: 100%;
     background-color: #9eccaba0;

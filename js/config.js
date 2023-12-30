@@ -14,7 +14,7 @@ export function loadConfig() {
         // 监听xhr对象的请求状态 与服务器的响应状态
         if (this.readyState == 4 && this.status == 200) {
             // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
-            LOGGER.flog("CONFIG","Loading Finish"+config)
+            LOGGER.flog("CONFIG","Loading Finish"+JSON.parse(this.response))
             config = JSON.parse(this.response);
             console.log(config);
             //Apply configuration
