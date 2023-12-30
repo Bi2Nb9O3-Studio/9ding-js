@@ -2,9 +2,12 @@ import * as THREE from "/js/three.module.js";
 import { GLTFLoader } from "/js/GLTFLoader.js";
 import { PointerLockControls } from "/js/PointerLockControls.js";
 import * as CANTOL from "/js/canvasControl.js";
+import * as LOGGER from "/js/logging.js";
 //Public Variables
+
 // Create a scene
 const scene = new THREE.Scene();
+document.getElementById("loggingta").value = "";
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(
@@ -27,6 +30,8 @@ const spaceBoundaries = {
     minZ: -6.63,
     maxZ: -1.23,
 };
+
+//Public Functions ==========================
 
 function sleep(n) {
     var start = new Date().getTime();
@@ -83,12 +88,14 @@ function animate() {
 function showCameraInfo() {
     const position = camera.position;
     const rotation = camera.rotation;
-    console.log(
+    LOGGER.flog(
+        "USER",
         `Camera Position: x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(
             2
         )}, z: ${position.z.toFixed(2)}`
     );
-    console.log(
+    LOGGER.flog(
+        "USER",
         `Camera Rotation: x: ${rotation.x.toFixed(2)}, y: ${rotation.y.toFixed(
             2
         )}, z: ${rotation.z.toFixed(2)}`
@@ -127,7 +134,7 @@ function getObjectInsight() {
     return intersects;
 }
 
-function onloading() {
+export function onloading(CONFIG) {
     let isMobile = false;
     if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
         isMobile = true;
@@ -145,18 +152,18 @@ function onloading() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     // Load the GLTF model
-    var isFinishModel=0;
+    var isFinishModel = 0;
     const loader = new GLTFLoader();
     loader.load(
         "./static/model/model.gltf",
         function (gltf) {
             scene.add(gltf.scene);
-            console.log("[Three.js] Done Fetching model file.");
+            LOGGER.flog("Three.js","Done Fetching model file.");
             document.getElementById("modelloadingtext").innerText = "100%";
             document
                 .getElementById("modelloading")
                 .style.setProperty("--progress", "100%");
-            isFinishModel=1;
+            isFinishModel = 1;
         },
         function (xhr) {},
         function (error) {
@@ -255,13 +262,13 @@ function onloading() {
     scene.add(directionalLight);
     animate(renderer, scene, camera);
     //Canvas
-    let cpt=new CANTOL.CanvasPainter(1,4,'/static/img/1/info.json')
-    cpt.loadImg()
+    let cpt = new CANTOL.CanvasPainter(1, 4, "/static/img/1/info.json");
+    cpt.loadImg();
     var loopLoadingScan = setInterval(() => {
-        if(cpt.isLoadingFinish&&isFinishModel){
-            fadeOut(document.getElementById("loading"),16);
-            clearInterval(loopLoadingScan)
+        if (cpt.isLoadingFinish && isFinishModel&&!CONFIG.isStopAtLoadingPage) {
+            sleep(500);
+            fadeOut(document.getElementById("loading"), 16);
+            clearInterval(loopLoadingScan);
         }
     }, 100);
 }
-window.onload = onloading;

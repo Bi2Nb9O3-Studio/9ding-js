@@ -1,4 +1,4 @@
-//Loading images
+import * as LOGGER from '/js/logging.js';
 
 export class CanvasPainter {
     constructor(start, stop, infoURL) {
@@ -48,6 +48,7 @@ export class CanvasPainter {
                 if (that.loadingcnt == that.stop) {
                     that.isLoadingFinish = 1;
                 }
+                LOGGER.flog("CTP","Image "+"/static/img/1/" + i + ".jpg Done."+"("+(that.loadingcnt / that.stop).toFixed(4) * 100 + "%"+")")
             };
             this.images = [...this.images, loadingfile];
         }

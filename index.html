@@ -20,9 +20,6 @@
             /*这里设置margin:0; 和overflow:hidden; 能够保证移除全部的滚动条*/
         </style>
         <link rel="stylesheet" href="/css/style.css">
-        <link rel="preconnect" href="https://fonts.proxy.ustclug.org">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.proxy.ustclug.org/css2?family=Noto+Sans+SC&display=swap" rel="stylesheet">
 
     </head>
     <body>
@@ -54,13 +51,17 @@
                 <span class='leftText'>图片加载</span>
                 <span class='rightText'id="picloadingtext" >0%</span>
             </div>
+            <div id="domloading" style="margin-top: 10px;">
+                DOMContent....
+                <span id="domloadingtext" style="color: red;">x</span>
+            </div>
         </div>
-        <div id="logging"><textarea id="loggingta"></textarea></div>
+        <div id="logging" style="display: none;"><textarea id="loggingta"></textarea></div>
         <style>
         </style>
         <canvas id="maincav"></canvas>
         <!-- <canvas id="screen1left"></canvas> -->
-        <script type="module" src="/js/3dScene.js"></script>
+        <script src="/js/EntryPoint.js" type="module"></script>
 
         <button id="left">←</button>
         <button id="right">→</button>
