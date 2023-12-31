@@ -158,7 +158,7 @@ export function onloading(CONFIG) {
         "./static/model/model.gltf",
         function (gltf) {
             scene.add(gltf.scene);
-            LOGGER.flog("Three.js","Done Fetching model file.");
+            LOGGER.flog("Three.js", "Done Fetching model file.");
             document.getElementById("modelloadingtext").innerText = "100%";
             document
                 .getElementById("modelloading")
@@ -195,28 +195,46 @@ export function onloading(CONFIG) {
         }
     });
 
+    var keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
+
     document.addEventListener("keydown", function (event) {
-        switch (event.code) {
-            case "KeyW":
-                moveForward();
-                break;
-            case "KeyS":
-                moveBackward();
-                break;
-            case "KeyA":
-                moveLeft();
-                break;
-            case "KeyD":
-                moveRight();
-                break;
-            case "KeyL":
-                showCameraInfo();
-                break;
-            case "KeyJ":
-                console.log(getObjectInsight());
+        if (event.code == "KeyL" || event.code == "KeyJ") {
+            switch (event.code) {
+                case "KeyL":
+                    showCameraInfo();
+                    break;
+                case "KeyJ":
+                    console.log(getObjectInsight());
+            }
+        } else if(event.code=="KeyW"||event.code=="KeyS"||event.code=="KeyA"||event.code=="KeyD"){
+            keypressed[event.code] = 1;
         }
     });
 
+    document.addEventListener("keyup",(event)=>{
+        if(event.code=="KeyW"||event.code=="KeyS"||event.code=="KeyA"||event.code=="KeyD"){
+            keypressed[event.code] = 0;
+        }
+    })
+
+    var motionCheck=setInterval(() => {
+        if(keypressed.KeyW){
+            controls.moveForward(0.035);
+            checkBoundaries()
+        }
+        if(keypressed.KeyA){
+            controls.moveRight(-0.035);
+            checkBoundaries()
+        }
+        if(keypressed.KeyS){
+            controls.moveForward(-0.035);
+            checkBoundaries()
+        }
+        if(keypressed.KeyD){
+            controls.moveRight(0.035);
+            checkBoundaries()
+        }
+    },10);
     // Add event listeners for keyboard controls
     const moveForward = () => {
         controls.moveForward(1);
@@ -265,7 +283,11 @@ export function onloading(CONFIG) {
     let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
     cpt.loadImg();
     var loopLoadingScan = setInterval(() => {
-        if (cpt.isLoadingFinish && isFinishModel&&!CONFIG.isStopAtLoadingPage) {
+        if (
+            cpt.isLoadingFinish &&
+            isFinishModel &&
+            !CONFIG.isStopAtLoadingPage
+        ) {
             fadeOut(document.getElementById("loading"), 16);
             clearInterval(loopLoadingScan);
         }
