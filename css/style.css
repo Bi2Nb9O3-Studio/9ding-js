@@ -10,11 +10,12 @@
 
 body {
     font-family: "Source Han Sans Medium";
+    background-color: #252321;
 }
 
 #left,
 #right {
-    display: block;
+    display: none;
     margin-top: 70vh;
     width: 10vh;
     height: 5vh;
@@ -35,7 +36,7 @@ body {
 
 #forward,
 #backward {
-    display: block;
+    display: none;
     margin-left: 45vw;
     width: 5vh;
     height: 6vh;
@@ -183,3 +184,49 @@ body {
     background-color: #9eccaba0;
     color: black;
 }
+
+#banner{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    background-color: #3b3429;
+    opacity: 0;
+    animation: fade-in-out 8s ease-in-out 1;
+    -webkit-animation: fade-in-out 8s ease-in-out 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#banner1{
+    width:max-content;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+#banner1 > p{
+    font-size: 50px;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+

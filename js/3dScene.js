@@ -44,19 +44,14 @@ function sleep(n) {
     // console.log('休眠后:' + new Date().getTime());
 }
 
-function fadeOut(elemt, speed) {
-    elemt.style.opacity = 1;
-    var speed = speed || 16.6; //默认速度为16.6ms
-    var num = 20; //累加器
-    var timer = setInterval(function () {
-        num--;
-        elemt.style.opacity = num / 20;
-        if (num <= 0) {
-            clearInterval(timer);
-            elemt.remove();
-        }
-    }, speed);
-}
+var fadeOut = [
+    [{ opacity: 1 }, { opacity: 0 }],
+    {
+        duration: 1000,
+        iterations: 1,
+    },
+];
+
 //Mobile device detection
 function isMobileUserAgent() {
     const mobileKeywords = [
@@ -140,11 +135,11 @@ export function onloading(CONFIG) {
         isMobile = true;
     }
 
-    if (!isMobile) {
-        document.getElementById("left").style.display = "none";
-        document.getElementById("right").style.display = "none";
-        document.getElementById("forward").style.display = "none";
-        document.getElementById("backward").style.display = "none";
+    if (isMobile) {
+        document.getElementById("left").style.display = "block";
+        document.getElementById("right").style.display = "block";
+        document.getElementById("forward").style.display = "block";
+        document.getElementById("backward").style.display = "block";
     }
 
     //3D Model Load and display
@@ -206,35 +201,45 @@ export function onloading(CONFIG) {
                 case "KeyJ":
                     console.log(getObjectInsight());
             }
-        } else if(event.code=="KeyW"||event.code=="KeyS"||event.code=="KeyA"||event.code=="KeyD"){
+        } else if (
+            event.code == "KeyW" ||
+            event.code == "KeyS" ||
+            event.code == "KeyA" ||
+            event.code == "KeyD"
+        ) {
             keypressed[event.code] = 1;
         }
     });
 
-    document.addEventListener("keyup",(event)=>{
-        if(event.code=="KeyW"||event.code=="KeyS"||event.code=="KeyA"||event.code=="KeyD"){
+    document.addEventListener("keyup", (event) => {
+        if (
+            event.code == "KeyW" ||
+            event.code == "KeyS" ||
+            event.code == "KeyA" ||
+            event.code == "KeyD"
+        ) {
             keypressed[event.code] = 0;
         }
-    })
+    });
 
-    var motionCheck=setInterval(() => {
-        if(keypressed.KeyW){
+    var motionCheck = setInterval(() => {
+        if (keypressed.KeyW) {
             controls.moveForward(0.035);
-            checkBoundaries()
+            checkBoundaries();
         }
-        if(keypressed.KeyA){
+        if (keypressed.KeyA) {
             controls.moveRight(-0.035);
-            checkBoundaries()
+            checkBoundaries();
         }
-        if(keypressed.KeyS){
+        if (keypressed.KeyS) {
             controls.moveForward(-0.035);
-            checkBoundaries()
+            checkBoundaries();
         }
-        if(keypressed.KeyD){
+        if (keypressed.KeyD) {
             controls.moveRight(0.035);
-            checkBoundaries()
+            checkBoundaries();
         }
-    },10);
+    }, 10);
     // Add event listeners for keyboard controls
     const moveForward = () => {
         controls.moveForward(1);
@@ -288,7 +293,9 @@ export function onloading(CONFIG) {
             isFinishModel &&
             !CONFIG.isStopAtLoadingPage
         ) {
-            fadeOut(document.getElementById("loading"), 16);
+            document.getElementById("loading").animate(fadeOut[0], fadeOut[1]);
+            sleep(1000);
+            document.getElementById("loading").style.opacity = 0;
             clearInterval(loopLoadingScan);
         }
     }, 100);

@@ -3,13 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name=""viewport""
-            content=""target-densitydpi"
-            ="320,width"
-            ="640,user-scalable"
-            ="no""
-        />
+        <meta name=""viewport"" content=""target-densitydpi" ="320,width"
+        ="640,user-scalable" ="no"" />
         <title>Document</title>
         <script type="module" src="./js/GLTFLoader.js"></script>
         <style>
@@ -19,13 +14,12 @@
             }
             /*这里设置margin:0; 和overflow:hidden; 能够保证移除全部的滚动条*/
         </style>
-        <link rel="stylesheet" href="/css/style.css">
-
+        <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
         <!-- Loading Screen -->
         <div id="top"><span>Developing Verison Alpha 0.1.9</span></div>
-        <div id="loading">
+        <div id="loading" style="display: none">
             <svg
                 class="spinner"
                 width="65px"
@@ -43,22 +37,33 @@
                     r="30"
                 ></circle>
             </svg>
-            <div id="modelloading" style="margin-top: 100px;--progress: 0%" class="g-progress" >
-              <span class='leftText'>模型加载</span>
-              <span class='rightText' id="modelloadingtext">0%</span>
+            <div
+                id="modelloading"
+                style="margin-top: 100px; --progress: 0%"
+                class="g-progress"
+            >
+                <span class="leftText">模型加载</span>
+                <span class="rightText" id="modelloadingtext">0%</span>
             </div>
             <div id="picloading" style="--progress: 0%" class="g-progress">
-                <span class='leftText'>图片加载</span>
-                <span class='rightText'id="picloadingtext" >0%</span>
+                <span class="leftText">图片加载</span>
+                <span class="rightText" id="picloadingtext">0%</span>
             </div>
-            <div id="domloading" style="margin-top: 10px;">
+            <div id="domloading" style="margin-top: 10px">
                 DOMContent....
-                <span id="domloadingtext" style="color: red;">x</span>
+                <span id="domloadingtext" style="color: red">x</span>
             </div>
         </div>
-        <div id="logging" style="display: none;"><textarea id="loggingta"></textarea></div>
-        <style>
-        </style>
+        <div id="logging" style="display: none">
+            <textarea id="loggingta"></textarea>
+        </div>
+        <div id="banner">
+            <div id="banner1">
+                <img src="/assets/img/logo.png" width="350px" />
+                <p>Code By Bi2Nb9O3 Studio</p>
+            </div>
+            <p>Font:Source Han Sans CN</p>
+        </div>
         <canvas id="maincav"></canvas>
         <!-- <canvas id="screen1left"></canvas> -->
         <script src="/js/EntryPoint.js" type="module"></script>
