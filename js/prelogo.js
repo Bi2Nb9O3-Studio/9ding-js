@@ -14,6 +14,7 @@ function sleep(n) {
 export function show(config) {
     const bannerEle = document.getElementById("banner");
     bannerEle.onanimationend = () => {
+        bannerEle.remove()
         document.getElementById("loading").style.display = "";
         Scene.onloading(config);
         CONFIG.apply();

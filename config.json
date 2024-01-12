@@ -1,4 +1,5 @@
 {
-    "isDefualtOpenConsole":1,
-    "isStopAtLoadingPage":0
+    "isDefualtOpenConsole":true,
+    "isStopAtLoadingPage":false,
+    "isLoad3DScene":false
 }

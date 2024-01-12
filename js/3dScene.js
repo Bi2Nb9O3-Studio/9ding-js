@@ -44,14 +44,6 @@ function sleep(n) {
     // console.log('休眠后:' + new Date().getTime());
 }
 
-var fadeOut = [
-    [{ opacity: 1 }, { opacity: 0 }],
-    {
-        duration: 1000,
-        iterations: 1,
-    },
-];
-
 //Mobile device detection
 function isMobileUserAgent() {
     const mobileKeywords = [
@@ -130,173 +122,176 @@ function getObjectInsight() {
 }
 
 export function onloading(CONFIG) {
-    let isMobile = false;
-    if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
-        isMobile = true;
-    }
-
-    if (isMobile) {
-        document.getElementById("left").style.display = "block";
-        document.getElementById("right").style.display = "block";
-        document.getElementById("forward").style.display = "block";
-        document.getElementById("backward").style.display = "block";
-    }
-
-    //3D Model Load and display
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // Load the GLTF model
-    var isFinishModel = 0;
-    const loader = new GLTFLoader();
-    loader.load(
-        "./static/model/model.gltf",
-        function (gltf) {
-            scene.add(gltf.scene);
-            LOGGER.flog("Three.js", "Done Fetching model file.");
-            document.getElementById("modelloadingtext").innerText = "100%";
-            document
-                .getElementById("modelloading")
-                .style.setProperty("--progress", "100%");
-            isFinishModel = 1;
-        },
-        function (xhr) {},
-        function (error) {
-            console.error(error);
+    if (CONFIG.isLoad3DScene) {
+        let isMobile = false;
+        if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
+            isMobile = true;
         }
-    );
 
-    //Controls for different Device
-    // PC
-    // Create controls
-    const controls = new PointerLockControls(camera, document.body);
-    scene.add(controls.getObject());
-
-    // Enable pointer lock
-    document.addEventListener("click", function () {
-        if (isMobile) return;
-        controls.lock();
-    });
-
-    // Add event listeners for mouse movement
-    document.addEventListener("mousemove", function (event) {
-        if (controls.isLocked) {
-            const movementX =
-                event.movementX ||
-                event.mozMovementX ||
-                event.webkitMovementX ||
-                0;
-            checkBoundaries();
+        if (isMobile) {
+            document.getElementById("left").style.display = "block";
+            document.getElementById("right").style.display = "block";
+            document.getElementById("forward").style.display = "block";
+            document.getElementById("backward").style.display = "block";
         }
-    });
 
-    var keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
+        //3D Model Load and display
 
-    document.addEventListener("keydown", function (event) {
-        if (event.code == "KeyL" || event.code == "KeyJ") {
-            switch (event.code) {
-                case "KeyL":
-                    showCameraInfo();
-                    break;
-                case "KeyJ":
-                    console.log(getObjectInsight());
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Load the GLTF model
+        var isFinishModel = 0;
+        const loader = new GLTFLoader();
+        loader.load(
+            "./static/model/model.gltf",
+            function (gltf) {
+                scene.add(gltf.scene);
+                LOGGER.flog("Three.js", "Done Fetching model file.");
+                document.getElementById("modelloadingtext").innerText = "100%";
+                document
+                    .getElementById("modelloading")
+                    .style.setProperty("--progress", "100%");
+                isFinishModel = 1;
+                document.getElementById("loadingInfo").innerText =
+                    "模型加载完成";
+            },
+            function (xhr) {},
+            function (error) {
+                console.error(error);
             }
-        } else if (
-            event.code == "KeyW" ||
-            event.code == "KeyS" ||
-            event.code == "KeyA" ||
-            event.code == "KeyD"
-        ) {
-            keypressed[event.code] = 1;
-        }
-    });
+        );
 
-    document.addEventListener("keyup", (event) => {
-        if (
-            event.code == "KeyW" ||
-            event.code == "KeyS" ||
-            event.code == "KeyA" ||
-            event.code == "KeyD"
-        ) {
-            keypressed[event.code] = 0;
-        }
-    });
+        //Controls for different Device
+        // PC
+        // Create controls
+        const controls = new PointerLockControls(camera, document.body);
+        scene.add(controls.getObject());
 
-    var motionCheck = setInterval(() => {
-        if (keypressed.KeyW) {
-            controls.moveForward(0.035);
+        // Enable pointer lock
+        document.addEventListener("click", function () {
+            if (isMobile) return;
+            controls.lock();
+        });
+
+        // Add event listeners for mouse movement
+        document.addEventListener("mousemove", function (event) {
+            if (controls.isLocked) {
+                const movementX =
+                    event.movementX ||
+                    event.mozMovementX ||
+                    event.webkitMovementX ||
+                    0;
+                checkBoundaries();
+            }
+        });
+
+        var keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
+
+        document.addEventListener("keydown", function (event) {
+            if (event.code == "KeyL" || event.code == "KeyJ") {
+                switch (event.code) {
+                    case "KeyL":
+                        showCameraInfo();
+                        break;
+                    case "KeyJ":
+                        console.log(getObjectInsight());
+                }
+            } else if (
+                event.code == "KeyW" ||
+                event.code == "KeyS" ||
+                event.code == "KeyA" ||
+                event.code == "KeyD"
+            ) {
+                keypressed[event.code] = 1;
+            }
+        });
+
+        document.addEventListener("keyup", (event) => {
+            if (
+                event.code == "KeyW" ||
+                event.code == "KeyS" ||
+                event.code == "KeyA" ||
+                event.code == "KeyD"
+            ) {
+                keypressed[event.code] = 0;
+            }
+        });
+
+        var motionCheck = setInterval(() => {
+            if (keypressed.KeyW) {
+                controls.moveForward(0.035);
+                checkBoundaries();
+            }
+            if (keypressed.KeyA) {
+                controls.moveRight(-0.035);
+                checkBoundaries();
+            }
+            if (keypressed.KeyS) {
+                controls.moveForward(-0.035);
+                checkBoundaries();
+            }
+            if (keypressed.KeyD) {
+                controls.moveRight(0.035);
+                checkBoundaries();
+            }
+        }, 10);
+        // Add event listeners for keyboard controls
+        const moveForward = () => {
+            controls.moveForward(1);
             checkBoundaries();
-        }
-        if (keypressed.KeyA) {
-            controls.moveRight(-0.035);
+        };
+
+        const moveBackward = () => {
+            controls.moveForward(-1);
             checkBoundaries();
-        }
-        if (keypressed.KeyS) {
-            controls.moveForward(-0.035);
+        };
+
+        const moveLeft = () => {
+            controls.moveRight(-1);
             checkBoundaries();
-        }
-        if (keypressed.KeyD) {
-            controls.moveRight(0.035);
+        };
+
+        const moveRight = () => {
+            controls.moveRight(1);
             checkBoundaries();
-        }
-    }, 10);
-    // Add event listeners for keyboard controls
-    const moveForward = () => {
-        controls.moveForward(1);
-        checkBoundaries();
-    };
+        };
 
-    const moveBackward = () => {
-        controls.moveForward(-1);
-        checkBoundaries();
-    };
+        //Moblie
 
-    const moveLeft = () => {
-        controls.moveRight(-1);
-        checkBoundaries();
-    };
+        document.getElementById("left").onclick = () => {
+            camera.rotation.y += 0.35;
+        };
 
-    const moveRight = () => {
-        controls.moveRight(1);
-        checkBoundaries();
-    };
+        document.getElementById("right").onclick = () => {
+            camera.rotation.y -= 0.35;
+        };
 
-    //Moblie
+        document.getElementById("forward").onclick = moveForward;
+        document.getElementById("backward").onclick = moveBackward;
 
-    document.getElementById("left").onclick = () => {
-        camera.rotation.y += 0.35;
-    };
+        //3D Scene Setting
+        // Create ambient light
+        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+        scene.add(ambientLight);
 
-    document.getElementById("right").onclick = () => {
-        camera.rotation.y -= 0.35;
-    };
-
-    document.getElementById("forward").onclick = moveForward;
-    document.getElementById("backward").onclick = moveBackward;
-
-    //3D Scene Setting
-    // Create ambient light
-    const ambientLight = new THREE.AmbientLight(0xaaaaaa);
-    scene.add(ambientLight);
-
-    // Create directional light
-    const directionalLight = new THREE.DirectionalLight(0xffeedd);
-    directionalLight.position.set(0, 0, 1);
-    scene.add(directionalLight);
-    animate(renderer, scene, camera);
+        // Create directional light
+        const directionalLight = new THREE.DirectionalLight(0xffeedd);
+        directionalLight.position.set(0, 0, 1);
+        scene.add(directionalLight);
+        animate(renderer, scene, camera);
+    }
     //Canvas
     let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
-    cpt.loadImg();
+    cpt.loadInfo();
     var loopLoadingScan = setInterval(() => {
         if (
             cpt.isLoadingFinish &&
-            isFinishModel &&
+            (isFinishModel || !CONFIG.isLoad3DScene) &&
             !CONFIG.isStopAtLoadingPage
         ) {
-            document.getElementById("loading").animate(fadeOut[0], fadeOut[1]);
-            sleep(1000);
-            document.getElementById("loading").style.opacity = 0;
+            $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
+            cpt.canvasPaint([document.getElementById("left1cav")]);
         }
     }, 100);
 }

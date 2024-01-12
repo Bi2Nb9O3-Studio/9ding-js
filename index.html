@@ -3,8 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name=""viewport"" content=""target-densitydpi" ="320,width"
-        ="640,user-scalable" ="no"" />
+        <meta name="viewport" content="" target-densitydpi = "320",width = "640",user-scalable ="no" />
         <title>Document</title>
         <script type="module" src="./js/GLTFLoader.js"></script>
         <style>
@@ -15,6 +14,7 @@
             /*这里设置margin:0; 和overflow:hidden; 能够保证移除全部的滚动条*/
         </style>
         <link rel="stylesheet" href="/css/style.css" />
+        <script src="/js/jquery.js"></script>
     </head>
     <body>
         <!-- Loading Screen -->
@@ -37,9 +37,10 @@
                     r="30"
                 ></circle>
             </svg>
+            <div id="loadingInfo"></div>
             <div
                 id="modelloading"
-                style="margin-top: 100px; --progress: 0%"
+                style="margin-top: 30px; --progress: 0%"
                 class="g-progress"
             >
                 <span class="leftText">模型加载</span>
@@ -73,5 +74,17 @@
         <button id="right">→</button>
         <button id="forward">↑</button>
         <button id="backward">↓</button>
+
+        <div>
+            <canvas id="left1cav" width="1480px" height="860px"></canvas>
+            <canvas id="left2"></canvas>
+            <canvas id="left3"></canvas>
+            <!-- <canvas></canvas>
+            <canvas></canvas>
+            <canvas></canvas>
+            <canvas></canvas>
+            <canvas></canvas>
+            <canvas></canvas> -->
+        </div>
     </body>
 </html>

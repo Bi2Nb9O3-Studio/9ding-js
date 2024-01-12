@@ -12,6 +12,7 @@ export function loadConfig() {
     let xhr = new XMLHttpRequest();
     // 第二步: 调用open函数 指定请求方式 与URL地址
     xhr.open("GET", "/config.json", true);
+    xhr.setRequestHeader('If-Modified-Since', '0');
     // 第三步: 调用send函数 发起ajax请求
     xhr.send();
     // 第四步: 监听onreadystatechange事件
@@ -21,7 +22,6 @@ export function loadConfig() {
             // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
             LOGGER.flog("CONFIG","Loading Finish")
             config = JSON.parse(this.response);
-            console.log(config);
             //Apply configuration
 
             BANNER.show(config);
