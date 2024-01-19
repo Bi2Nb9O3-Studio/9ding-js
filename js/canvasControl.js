@@ -1,7 +1,8 @@
 import * as LOGGER from "/js/logging.js";
+import * as THREE from "/js/lib/three.module.js";
 
 export class CanvasPainter {
-    constructor(start, stop, infoURL) {
+    constructor(start, stop, infoURL, cavObjArray) {
         this.start = start;
         this.stop = stop;
         //processing vaules
@@ -9,6 +10,8 @@ export class CanvasPainter {
         this.isLoadingFinish = 0;
         this.images = [];
         this.infoURL = infoURL;
+        this.cavobj = cavObjArray;
+        this.isInited = 0;
     }
 
     loadInfo() {
@@ -68,22 +71,75 @@ export class CanvasPainter {
             this.images = [...this.images, loadingfile];
         }
     }
-    canvasPaint(canvas) {
+    canvasInitPaint(cavObjArray) {
+        //preProcess
         let that = this;
-        canvas.forEach((e) => {
-            if (e.tagName != "CANVAS") {
+        if (cavObjArray != undefined) {
+            this.cavobj = cavObjArray;
+        }
+
+        //=======================================
+
+        //! This just for test!
+        that.cavobj.forEach((ele) => {
+            var canvas = ele[0];
+            if (canvas.tagName != "CANVAS") {
                 throw new Error("Not a CANVAS Element(" + e + ")");
             }
+            var obj = ele[1];
+            //State 1 Canvas Painting
+            var content = canvas.getContext("2d");
+            content.drawImage(
+                that.images[0],
+                (canvas.width -
+                    parseInt(
+                        (
+                            (canvas.height - 50) *
+                            (that.images[0].width / that.images[0].height)
+                        ).toFixed(0)
+                    )) /
+                    2,
+                0,
+                (canvas.height - 50) *
+                    (that.images[0].width / that.images[0].height),
+                canvas.height - 50
+            );
+
+            //State 2
+            var texture = new THREE.Texture(canvas);
+            texture.repeat.set(0.5, 0.5);
+            texture.flipX = true;
+            texture.flipY = true;
+            const uv = new Float32Array([
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1, // 正面
+            ]);
+            // 创建uv属性
+            // obj.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+            var material = new THREE.MeshBasicMaterial({
+                map: texture,
+                name: "cav1",
+            });
+            obj.material = material;
+            obj.material.needsUpdate = true;
+            console.log(obj);
         });
-        //! This just for test!
-        var content = canvas[0].getContext("2d");
-        content.drawImage(
-            that.images[0],
-            0,
-            0,
-            canvas[0].innerHeight - 50,
-            (canvas[0].innerHeight - 50) *
-                (that.images[0].innerWidth / that.images[0].innerHeight)
-        );
+        that.isInited = 1;
+    }
+    canvasRender() {
+        let that = this;
+        if (!this.isInited) {
+            return;
+        }
+        that.cavobj.forEach((ele) => {
+            ele[1].material.map.needsUpdate = true;
+            // console.log(ele[1].material.map);
+        });
     }
 }

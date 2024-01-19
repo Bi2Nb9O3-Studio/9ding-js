@@ -2,7 +2,7 @@ import * as BANNER from "/js/prelogo.js"
 import * as LOGGER from "/js/logging.js"
 export var config = 1;
 export function apply(){
-    if (config.isDefualtOpenConsole == 1) {
+    if (config.isDefaultOpenConsole == 1) {
         document.getElementById("logging").style.display = "";
     }
 }

@@ -13,6 +13,13 @@ function sleep(n) {
 
 export function show(config) {
     const bannerEle = document.getElementById("banner");
+    if(!config.isShowLogo){
+        bannerEle.remove()
+        document.getElementById("loading").style.display = "";
+        Scene.onloading(config);
+        CONFIG.apply();
+
+    }
     bannerEle.onanimationend = () => {
         bannerEle.remove()
         document.getElementById("loading").style.display = "";

@@ -1,11 +1,12 @@
-import * as THREE from "/js/three.module.js";
-import { GLTFLoader } from "/js/GLTFLoader.js";
-import { PointerLockControls } from "/js/PointerLockControls.js";
+import * as THREE from "/js/lib/three.module";
+import { GLTFLoader } from "/js/lib/GLTFLoader";
+import { PointerLockControls } from "/js/lib/PointerLockControls.js";
 import * as CANTOL from "/js/canvasControl.js";
 import * as LOGGER from "/js/logging.js";
 //Public Variables
 
 // Create a scene
+let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
 const scene = new THREE.Scene();
 document.getElementById("loggingta").value = "";
 
@@ -68,6 +69,7 @@ function isMobileUserAgent() {
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
+    cpt.canvasRender();
 }
 
 //Utilities
@@ -121,6 +123,15 @@ function getObjectInsight() {
     return intersects;
 }
 
+window.addEventListener("resize", () => {
+    // 重置渲染器宽高比
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    // 重置相机宽高比
+    camera.aspect = window.innerWidth / window.innerHeight;
+    // 更新相机投影矩阵
+    camera.updateProjectionMatrix();
+  });
+
 export function onloading(CONFIG) {
     if (CONFIG.isLoad3DScene) {
         let isMobile = false;
@@ -160,7 +171,7 @@ export function onloading(CONFIG) {
                 console.error(error);
             }
         );
-
+        
         //Controls for different Device
         // PC
         // Create controls
@@ -281,7 +292,6 @@ export function onloading(CONFIG) {
         animate(renderer, scene, camera);
     }
     //Canvas
-    let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
     cpt.loadInfo();
     var loopLoadingScan = setInterval(() => {
         if (
@@ -291,7 +301,12 @@ export function onloading(CONFIG) {
         ) {
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
-            cpt.canvasPaint([document.getElementById("left1cav")]);
+            cpt.canvasInitPaint([
+                [
+                    document.getElementById("left1cav"),
+                    scene.getObjectByName("Curve134"),
+                ],
+            ]);
         }
     }, 100);
 }
