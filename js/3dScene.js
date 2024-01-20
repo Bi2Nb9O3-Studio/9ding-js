@@ -1,5 +1,5 @@
-import * as THREE from "/js/lib/three.module";
-import { GLTFLoader } from "/js/lib/GLTFLoader";
+import * as THREE from "/js/lib/three.module.js";
+import { GLTFLoader } from "/js/lib/GLTFLoader.js";
 import { PointerLockControls } from "/js/lib/PointerLockControls.js";
 import * as CANTOL from "/js/canvasControl.js";
 import * as LOGGER from "/js/logging.js";
@@ -133,18 +133,18 @@ window.addEventListener("resize", () => {
   });
 
 export function onloading(CONFIG) {
-    if (CONFIG.isLoad3DScene) {
-        let isMobile = false;
-        if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
-            isMobile = true;
-        }
+    let isMobile = false;
+    if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
+        isMobile = true;
+    }
 
-        if (isMobile) {
-            document.getElementById("left").style.display = "block";
-            document.getElementById("right").style.display = "block";
-            document.getElementById("forward").style.display = "block";
-            document.getElementById("backward").style.display = "block";
-        }
+    if (isMobile) {
+        document.getElementById("left").style.display = "block";
+        document.getElementById("right").style.display = "block";
+        document.getElementById("forward").style.display = "block";
+        document.getElementById("backward").style.display = "block";
+    }
+    if (CONFIG.isLoad3DScene) {
 
         //3D Model Load and display
 
@@ -154,7 +154,7 @@ export function onloading(CONFIG) {
         var isFinishModel = 0;
         const loader = new GLTFLoader();
         loader.load(
-            "./static/model/model.gltf",
+            "./static/model/model.glb",
             function (gltf) {
                 scene.add(gltf.scene);
                 LOGGER.flog("Three.js", "Done Fetching model file.");
@@ -166,12 +166,20 @@ export function onloading(CONFIG) {
                 document.getElementById("loadingInfo").innerText =
                     "模型加载完成";
             },
-            function (xhr) {},
+            function (xhr) {
+                // 控制台查看加载进度xhr
+                // 通过加载进度xhr可以控制前端进度条进度   
+                const percent = xhr.loaded / xhr.total;
+                document.getElementById("modelloadingtext").innerText = (percent*100).toFixed(4) + "%";
+                document
+                    .getElementById("modelloading")
+                    .style.setProperty("--progress", (percent*100).toFixed(4)+"%");
+                
+            },
             function (error) {
                 console.error(error);
             }
         );
-        
         //Controls for different Device
         // PC
         // Create controls
@@ -206,6 +214,7 @@ export function onloading(CONFIG) {
                         break;
                     case "KeyJ":
                         console.log(getObjectInsight());
+                        break;
                 }
             } else if (
                 event.code == "KeyW" ||
@@ -230,19 +239,19 @@ export function onloading(CONFIG) {
 
         var motionCheck = setInterval(() => {
             if (keypressed.KeyW) {
-                controls.moveForward(0.035);
+                controls.moveForward(CONFIG.moveDis);
                 checkBoundaries();
             }
             if (keypressed.KeyA) {
-                controls.moveRight(-0.035);
+                controls.moveRight(-CONFIG.moveDis);
                 checkBoundaries();
             }
             if (keypressed.KeyS) {
-                controls.moveForward(-0.035);
+                controls.moveForward(-CONFIG.moveDis);
                 checkBoundaries();
             }
             if (keypressed.KeyD) {
-                controls.moveRight(0.035);
+                controls.moveRight(CONFIG.moveDis);
                 checkBoundaries();
             }
         }, 10);
@@ -259,11 +268,6 @@ export function onloading(CONFIG) {
 
         const moveLeft = () => {
             controls.moveRight(-1);
-            checkBoundaries();
-        };
-
-        const moveRight = () => {
-            controls.moveRight(1);
             checkBoundaries();
         };
 
@@ -304,9 +308,10 @@ export function onloading(CONFIG) {
             cpt.canvasInitPaint([
                 [
                     document.getElementById("left1cav"),
-                    scene.getObjectByName("Curve134"),
+                    [0.25, 2.00, -1.23]//xyz
                 ],
-            ]);
+            ],
+            scene);
         }
     }, 100);
 }

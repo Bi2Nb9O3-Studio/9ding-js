@@ -2,5 +2,7 @@
     "isDefaultOpenConsole":true,
     "isStopAtLoadingPage":false,
     "isLoad3DScene":true,
-    "isShowLogo":false
+    "isShowLogo":false,
+    "moveDis":0.05,
+    "freecam":true
 }

@@ -71,7 +71,7 @@ export class CanvasPainter {
             this.images = [...this.images, loadingfile];
         }
     }
-    canvasInitPaint(cavObjArray) {
+    canvasInitPaint(cavObjArray, scene) {
         //preProcess
         let that = this;
         if (cavObjArray != undefined) {
@@ -86,7 +86,7 @@ export class CanvasPainter {
             if (canvas.tagName != "CANVAS") {
                 throw new Error("Not a CANVAS Element(" + e + ")");
             }
-            var obj = ele[1];
+            var objpos = ele[1];
             //State 1 Canvas Painting
             var content = canvas.getContext("2d");
             content.drawImage(
@@ -104,29 +104,22 @@ export class CanvasPainter {
                     (that.images[0].width / that.images[0].height),
                 canvas.height - 50
             );
-
             //State 2
-            var texture = new THREE.Texture(canvas);
-            texture.repeat.set(0.5, 0.5);
+            var texture = new THREE.CanvasTexture(canvas);
             texture.flipX = true;
             texture.flipY = true;
-            const uv = new Float32Array([
-                0,
-                0,
-                1,
-                0,
-                1,
-                1,
-                0,
-                1, // 正面
-            ]);
-            // 创建uv属性
-            // obj.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
             var material = new THREE.MeshBasicMaterial({
                 map: texture,
                 name: "cav1",
             });
-            obj.material = material;
+            var obj = new THREE.Mesh(
+                new THREE.PlaneGeometry(1.48, 0.86),
+                material
+            );
+            obj.position.set(objpos[0],objpos[1],objpos[2])
+            obj.name="screen1"
+            obj.rotation.y=1.570796
+            scene.add(obj);
             obj.material.needsUpdate = true;
             console.log(obj);
         });
@@ -138,7 +131,9 @@ export class CanvasPainter {
             return;
         }
         that.cavobj.forEach((ele) => {
-            ele[1].material.map.needsUpdate = true;
+            if (ele[1].material) {
+                ele[1].material.map.needsUpdate = true;
+            }
             // console.log(ele[1].material.map);
         });
     }
