@@ -26,10 +26,10 @@ const renderer = new THREE.WebGLRenderer({
 
 // Define the boundaries of the space
 const spaceBoundaries = {
-    minX: 0.25,
+    minX: 0.35,
     maxX: 16.25,
     minZ: -6.63,
-    maxZ: -1.23,
+    maxZ: -0.5,
 };
 
 //Public Functions ==========================
@@ -130,7 +130,7 @@ window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     // 更新相机投影矩阵
     camera.updateProjectionMatrix();
-  });
+});
 
 export function onloading(CONFIG) {
     let isMobile = false;
@@ -145,7 +145,6 @@ export function onloading(CONFIG) {
         document.getElementById("backward").style.display = "block";
     }
     if (CONFIG.isLoad3DScene) {
-
         //3D Model Load and display
 
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -168,13 +167,16 @@ export function onloading(CONFIG) {
             },
             function (xhr) {
                 // 控制台查看加载进度xhr
-                // 通过加载进度xhr可以控制前端进度条进度   
+                // 通过加载进度xhr可以控制前端进度条进度
                 const percent = xhr.loaded / xhr.total;
-                document.getElementById("modelloadingtext").innerText = (percent*100).toFixed(4) + "%";
+                document.getElementById("modelloadingtext").innerText =
+                    (percent * 100).toFixed(4) + "%";
                 document
                     .getElementById("modelloading")
-                    .style.setProperty("--progress", (percent*100).toFixed(4)+"%");
-                
+                    .style.setProperty(
+                        "--progress",
+                        (percent * 100).toFixed(4) + "%"
+                    );
             },
             function (error) {
                 console.error(error);
@@ -305,13 +307,13 @@ export function onloading(CONFIG) {
         ) {
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
-            cpt.canvasInitPaint([
+            cpt.canvasInitPaint(
                 [
-                    document.getElementById("left1cav"),
-                    [0.25, 2.00, -1.23]//xyz
+                    [[1480,860], [0.25, 1.75, -1.23]],
+                    [[1480,860], [0.25, 1.75, -3.0]],
                 ],
-            ],
-            scene);
+                scene
+            );
         }
     }, 100);
 }
