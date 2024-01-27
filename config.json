@@ -1,8 +1,12 @@
 {
-    "isDefaultOpenConsole":true,
-    "isStopAtLoadingPage":false,
-    "isLoad3DScene":true,
-    "isShowLogo":false,
-    "moveDis":0.05,
-    "freecam":true
+    "isDefaultOpenConsole": true,
+    "isStopAtLoadingPage": false,
+    "isLoad3DScene": true,
+    "isShowLogo": false,
+    "moveDis": 0.05,
+    "freecam": true,
+    "screens": [
+        [[1480,860],[0.25,1.75,-1.23]],
+        [[1480,860],[0.25,1.75,-3.0]]
+    ]
 }

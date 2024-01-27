@@ -307,13 +307,7 @@ export function onloading(CONFIG) {
         ) {
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
-            cpt.canvasInitPaint(
-                [
-                    [[1480,860], [0.25, 1.75, -1.23]],
-                    [[1480,860], [0.25, 1.75, -3.0]],
-                ],
-                scene
-            );
+            cpt.canvasInitPaint(CONFIG.screens, scene);
         }
     }, 100);
 }
