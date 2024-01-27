@@ -195,8 +195,8 @@ body {
     z-index: 99999;
     background-color: #3b3429;
     opacity: 0;
-    animation: fade-in-out 8s ease-in-out 1;
-    -webkit-animation: fade-in-out 8s ease-in-out 1;
+    animation: fade-in-out 2s ease-in-out 1;
+    -webkit-animation: fade-in-out 2s ease-in-out 1;
     display: flex;
     justify-content: center;
     align-items: center;

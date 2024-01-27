@@ -27,7 +27,7 @@ export class CanvasPainter {
                 }
             })
             .then(function (jsonData) {
-                that.imgInfo=jsonData
+                that.imgInfo = jsonData;
                 document.getElementById("loadingInfo").innerText =
                     "图片信息加载完成";
                 that.loadImg();
@@ -72,7 +72,15 @@ export class CanvasPainter {
             this.images = [...this.images, loadingfile];
         }
     }
+    /**
+     * @description 初始化canvas画图
+     * @param {Array} cavObjArray - 包含canvas对象和位置信息的数组
+     * @param {Object} scene - Three.js场景对象
+     */
     canvasInitPaint(cavObjArray, scene) {
+        //Custom Settings
+        const picScale = 80;
+
         //preProcess
         let that = this;
         if (cavObjArray != undefined) {
@@ -83,43 +91,51 @@ export class CanvasPainter {
         var cnt = 0;
         that.cavobj.forEach((ele) => {
             var canvassz = ele[0];
-            var canvas=document.createElement("canvas")
-            canvas.width=canvassz[0]
-            canvas.height=canvassz[1]
+            var canvas = document.createElement("canvas");
+            canvas.width = canvassz[0];
+            canvas.height = canvassz[1];
             var objpos = ele[1];
             var context = canvas.getContext("2d");
             context.fillStyle = "#c7e8ff";
             context.fillRect(0, 0, canvassz[0], canvassz[1]);
             var image = that.images[cnt];
+            var imageinfo = that.imgInfo[cnt];
             context.drawImage(
                 image,
                 (canvas.width -
                     parseInt(
                         (
-                            (canvas.height - 80) *
+                            (canvas.height - picScale) *
                             (image.width / image.height)
                         ).toFixed(0)
                     )) /
                     2,
                 0,
-                (canvas.height - 80) * (image.width / image.height),
-                canvas.height - 80
+                (canvas.height - picScale) * (image.width / image.height),
+                canvas.height - picScale
             );
+            context.fillStyle = "black";
+            context.font = "60px sans-serif";
+            console.log(context.font)
+            context.fillText(imageinfo['学生姓名'], 50, canvas.height-20);
             var texture = new THREE.CanvasTexture(canvas);
             var material = new THREE.MeshBasicMaterial({
                 map: texture,
-                name: "cav"+(cnt+1),
+                name: "cav" + (cnt + 1),
             });
             var obj = new THREE.Mesh(
-                new THREE.PlaneGeometry(canvas.width/1000, canvas.height/1000),
+                new THREE.PlaneGeometry(
+                    canvas.width / 1000,
+                    canvas.height / 1000
+                ),
                 material
             );
             obj.position.set(objpos[0], objpos[1], objpos[2]);
-            obj.name = "screen"+(cnt+1);
-            obj.rotation.y = 1.570796;
+            obj.name = "screen" + (cnt + 1);
+            obj.rotation.y = 1.570796;//弧度数据
             scene.add(obj);
+            console.log(canvas);
             obj.material.needsUpdate = true;
-            console.log(obj);
             cnt++;
         });
         that.isInited = 1;
