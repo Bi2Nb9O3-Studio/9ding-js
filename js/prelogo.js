@@ -1,5 +1,6 @@
 import * as Scene from "/js/3dScene.js";
 import * as CONFIG from "/js/config.js";
+import * as NSBA from "/js/nsba.js"
 function sleep(n) {
     var start = new Date().getTime();
     //  console.log('休眠前:' + start);
@@ -12,6 +13,7 @@ function sleep(n) {
 }
 
 export function show(config) {
+    NSBA.isSupported()
     const bannerEle = document.getElementById("banner");
     if(!config.isShowLogo){
         bannerEle.remove()
