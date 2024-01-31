@@ -3,14 +3,14 @@ import * as THREE from "/js/lib/three.module.js";
 
 /**
  * @description 屏幕对象
- * @param {int} uuid - UUID
+ * @param {number} uuid - UUID
  * @param {THREE.Scene} scene - 父场景
- * @param {float} width - 屏幕宽度
- * @param {float} height - 屏幕高度
- * @param {float} scale - 缩放大小(px=>米)
+ * @param {number} width - 屏幕宽度
+ * @param {number} height - 屏幕高度
+ * @param {number|undefined} scale - 缩放大小(px=>米)
  * @param {Array} pics - 图片数组
  * @param {Array} objInfo - 物体信息
- * @param {int} padding - 内边距
+ * @param {number} padding - 内边距
  * @param {JSON}
  */
 class Screen {
@@ -35,9 +35,49 @@ class Screen {
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.padding = padding;
+        this.imgInfo = imgInfo;
         var context = canvas.getContext("2d");
         context.fillStyle = "#c7e8ff";
-        context.fillRect(0, 0, canvassz[0], canvassz[1]);
+        context.fillRect(0, 0, this.width, this.height);
+        context.drawImage(
+            image,
+            (this.width -
+                parseInt(
+                    (
+                        (this.height - this.padding) *
+                        (pics[0].width / pics[0].height)
+                    ).toFixed(0)
+                )) /
+                2,
+            0,
+            (this.height - this.padding) * (pics[0].width / pics[0].height),
+            this.height - this.padding
+        );
+
+        context.fillStyle = "black";
+        context.font = "60px sans-serif";
+        context.fillText(imgInfo["学生姓名"], 50, this.height - 20);
+        var texture = new THREE.CanvasTexture(canvas);
+        var material = new THREE.MeshBasicMaterial({
+            map: texture,
+            name: "cav" + (cnt + 1),
+        });
+        this.obj = new THREE.Mesh(
+            new THREE.PlaneGeometry(
+                this.width * this.scale,
+                this.height * this.scale
+            ),
+            material
+        );
+        obj.position.set(objInfo[0][0], objInfo[0][1], objInfo[0][2]);
+        obj.name = "screen" + (cnt + 1);
+
+        obj.rotation.x = objInfo[1][0] * (180 / Math.PI);
+        obj.rotation.y = objInfo[1][1] * (180 / Math.PI);
+        obj.rotation.z = objInfo[1][2] * (180 / Math.PI);
+
+        scene.add(obj);
+        obj.material.needsUpdate = true;
     }
 }
 
@@ -56,6 +96,7 @@ export class CanvasPainter {
         this.cavobj = cavObjArray;
         this.isInited = 0;
         this.imgInfo;
+        this.screens = {};
     }
 
     /**
@@ -140,51 +181,28 @@ export class CanvasPainter {
         }
 
         //process
+        var cnt = 0;
         that.cavobj.forEach((ele) => {
-            var canvassz = ele[0];
-            var objpos = ele[1];
-            var image = that.images[cnt];
-            var imageinfo = that.imgInfo[cnt];
-            context.drawImage(
-                image,
-                (canvas.width -
-                    parseInt(
-                        (
-                            (canvas.height - picScale) *
-                            (image.width / image.height)
-                        ).toFixed(0)
-                    )) /
-                    2,
-                0,
-                (canvas.height - picScale) * (image.width / image.height),
-                canvas.height - picScale
-            );
-            context.fillStyle = "black";
-            context.font = "60px sans-serif";
-            console.log(context.font);
-            context.fillText(imageinfo["学生姓名"], 50, canvas.height - 20);
-            var texture = new THREE.CanvasTexture(canvas);
-            var material = new THREE.MeshBasicMaterial({
-                map: texture,
-                name: "cav" + (cnt + 1),
-            });
-            var obj = new THREE.Mesh(
-                new THREE.PlaneGeometry(
-                    canvas.width / 1000,
-                    canvas.height / 1000
+            that.screens = [
+                ...that.screens,
+                new Screen(
+                    cnt,
+                    scene,
+                    ele[0][0],
+                    ele[0][1],
+                    undefined,
+                    that.images.slice(
+                        cnt * (that.images.length / that.cavobj.length),
+                        (cnt + 1) * (that.images.length / that.cavobj.length)
+                    ),
+                    [...ele[1],...ele[2]],
+                    picScale,
+                    that.imgInfo.slice(
+                        cnt * (that.images.length / that.cavobj.length),
+                        (cnt + 1) * (that.images.length / that.cavobj.length)
+                    )
                 ),
-                material
-            );
-            obj.position.set(objpos[0], objpos[1], objpos[2]);
-            obj.name = "screen" + (cnt + 1);
-
-            obj.rotation.x = ele[2][0] * (180 / Math.PI);
-            obj.rotation.y = ele[2][1] * (180 / Math.PI);
-            obj.rotation.z = ele[2][2] * (180 / Math.PI);
-
-            scene.add(obj);
-            console.log(canvas);
-            obj.material.needsUpdate = true;
+            ];
             cnt++;
         });
         that.isInited = 1;
@@ -198,7 +216,6 @@ export class CanvasPainter {
             if (ele[1].material) {
                 ele[1].material.map.needsUpdate = true;
             }
-            // console.log(ele[1].material.map);
         });
     }
 }
