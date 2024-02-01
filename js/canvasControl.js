@@ -25,7 +25,7 @@ class Screen {
         padding,
         imgInfo
     ) {
-        this.uuid = uuid | ("scr" + uuid);
+        this.uuid = ("scr" + uuid);
         this.scene = scene;
         this.width = width;
         this.height = height;
@@ -36,11 +36,11 @@ class Screen {
         this.canvas.height = this.height;
         this.padding = padding;
         this.imgInfo = imgInfo;
-        var context = canvas.getContext("2d");
+        var context = this.canvas.getContext("2d");
         context.fillStyle = "#c7e8ff";
         context.fillRect(0, 0, this.width, this.height);
         context.drawImage(
-            image,
+            this.pics[0],
             (this.width -
                 parseInt(
                     (
@@ -56,11 +56,11 @@ class Screen {
 
         context.fillStyle = "black";
         context.font = "60px sans-serif";
-        context.fillText(imgInfo["学生姓名"], 50, this.height - 20);
-        var texture = new THREE.CanvasTexture(canvas);
+        context.fillText(this.imgInfo[0]["学生姓名"], 50, this.height - 20);
+        var texture = new THREE.CanvasTexture(this.canvas);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
-            name: "cav" + (cnt + 1),
+            name: this.uuid
         });
         this.obj = new THREE.Mesh(
             new THREE.PlaneGeometry(
@@ -69,15 +69,23 @@ class Screen {
             ),
             material
         );
-        obj.position.set(objInfo[0][0], objInfo[0][1], objInfo[0][2]);
-        obj.name = "screen" + (cnt + 1);
+        this.obj.position.set(objInfo[0][0], objInfo[0][1], objInfo[0][2]);
+        this.obj.name = this.uuid;
 
-        obj.rotation.x = objInfo[1][0] * (180 / Math.PI);
-        obj.rotation.y = objInfo[1][1] * (180 / Math.PI);
-        obj.rotation.z = objInfo[1][2] * (180 / Math.PI);
+        this.obj.rotation.x = objInfo[1][0] * (Math.PI/180);
+        this.obj.rotation.y = objInfo[1][1] * (Math.PI/180);
+        this.obj.rotation.z = objInfo[1][2] * (Math.PI/180);
+        // this.obj.rotation.x = objInfo[1][0];
+        // this.obj.rotation.y = objInfo[1][1];
+        // this.obj.rotation.z = objInfo[1][2];
+        // this.obj.rotation.y = 1;
 
-        scene.add(obj);
-        obj.material.needsUpdate = true;
+        this.scene.add(this.obj);
+        this.obj.material.needsUpdate = true;
+    }
+
+    render(){
+        this.obj.material.map.needsUpdate = true;
     }
 }
 
@@ -96,7 +104,7 @@ export class CanvasPainter {
         this.cavobj = cavObjArray;
         this.isInited = 0;
         this.imgInfo;
-        this.screens = {};
+        this.screens = [];
     }
 
     /**
@@ -104,7 +112,7 @@ export class CanvasPainter {
      */
 
     loadInfo() {
-        let that = this;
+        let self = this;
         document.getElementById("loadingInfo").innerText = "加载图像信息";
         fetch(this.infoURL)
             .then(function (response) {
@@ -115,10 +123,10 @@ export class CanvasPainter {
                 }
             })
             .then(function (jsonData) {
-                that.imgInfo = jsonData;
+                self.imgInfo = jsonData;
                 document.getElementById("loadingInfo").innerText =
                     "图片信息加载完成";
-                that.loadImg();
+                self.loadImg();
             })
             .catch(function (error) {
                 // 当请求出错时的处理逻辑
@@ -133,19 +141,19 @@ export class CanvasPainter {
         for (var i = this.start; i <= this.stop; i++) {
             let loadingfile = new Image();
             loadingfile.src = "/static/img/1/" + i + ".jpg";
-            let that = this;
+            let self = this;
             loadingfile.onload = function () {
-                that.loadingcnt++;
+                self.loadingcnt++;
                 document.getElementById("picloadingtext").innerText =
-                    (that.loadingcnt / that.stop).toFixed(4) * 100 + "%";
+                    (self.loadingcnt / self.stop).toFixed(4) * 100 + "%";
                 document
                     .getElementById("picloading")
                     .style.setProperty(
                         "--progress",
-                        (that.loadingcnt / that.stop).toFixed(4) * 100 + "%"
+                        (self.loadingcnt / self.stop).toFixed(4) * 100 + "%"
                     );
-                if (that.loadingcnt == that.stop) {
-                    that.isLoadingFinish = 1;
+                if (self.loadingcnt == self.stop) {
+                    self.isLoadingFinish = 1;
                 }
                 LOGGER.flog(
                     "CTP",
@@ -154,12 +162,12 @@ export class CanvasPainter {
                         i +
                         ".jpg Done." +
                         "(" +
-                        (that.loadingcnt / that.stop).toFixed(4) * 100 +
+                        (self.loadingcnt / self.stop).toFixed(4) * 100 +
                         "%" +
                         ")"
                 );
                 document.getElementById("loadingInfo").innerText =
-                    "图像" + that.loadingcnt + "加载完成";
+                    "图像" + self.loadingcnt + "加载完成";
             };
             this.images = [...this.images, loadingfile];
         }
@@ -175,47 +183,46 @@ export class CanvasPainter {
         const picScale = 80;
 
         //preProcess
-        let that = this;
+        let self = this;
         if (cavObjArray != undefined) {
             this.cavobj = cavObjArray;
         }
 
         //process
         var cnt = 0;
-        that.cavobj.forEach((ele) => {
-            that.screens = [
-                ...that.screens,
+        self.cavobj.forEach((ele) => {
+            self.screens = [
+                ...self.screens,
                 new Screen(
                     cnt,
                     scene,
                     ele[0][0],
                     ele[0][1],
                     undefined,
-                    that.images.slice(
-                        cnt * (that.images.length / that.cavobj.length),
-                        (cnt + 1) * (that.images.length / that.cavobj.length)
+                    self.images.slice(
+                        cnt * (self.images.length / self.cavobj.length),
+                        (cnt + 1) * (self.images.length / self.cavobj.length)
                     ),
-                    [...ele[1],...ele[2]],
+                    [ele[1],ele[2]],
                     picScale,
-                    that.imgInfo.slice(
-                        cnt * (that.images.length / that.cavobj.length),
-                        (cnt + 1) * (that.images.length / that.cavobj.length)
+                    self.imgInfo.slice(
+                        cnt * (self.images.length / self.cavobj.length),
+                        (cnt + 1) * (self.images.length / self.cavobj.length)
                     )
                 ),
             ];
+
             cnt++;
         });
-        that.isInited = 1;
+        self.isInited = 1;
     }
     canvasRender() {
-        let that = this;
+        let self = this;
         if (!this.isInited) {
             return;
         }
-        that.cavobj.forEach((ele) => {
-            if (ele[1].material) {
-                ele[1].material.map.needsUpdate = true;
-            }
-        });
+        self.screens.forEach((e)=>{
+            e.render();
+        })
     }
 }

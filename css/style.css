@@ -53,11 +53,13 @@ body {
 #backward {
     top: 75vh;
 }
+
 @property --progress {
     syntax: "<percentage>";
     inherits: true;
     initial-value: 0%;
 }
+
 .g-progress {
     display: flex;
     margin: 30px;
@@ -126,6 +128,7 @@ body {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(270deg);
     }
@@ -142,15 +145,19 @@ body {
     0% {
         stroke: #4285f4;
     }
+
     25% {
         stroke: #de3e35;
     }
+
     50% {
         stroke: #f7c223;
     }
+
     75% {
         stroke: #1b9a59;
     }
+
     100% {
         stroke: #4285f4;
     }
@@ -160,10 +167,12 @@ body {
     0% {
         stroke-dashoffset: 187;
     }
+
     50% {
         stroke-dashoffset: 46.75;
         transform: rotate(135deg);
     }
+
     100% {
         stroke-dashoffset: 187;
         transform: rotate(450deg);
@@ -186,7 +195,7 @@ body {
     color: black;
 }
 
-#banner{
+#banner {
     width: 100vw;
     height: 100vh;
     position: absolute;
@@ -203,8 +212,8 @@ body {
     flex-direction: column;
 }
 
-#banner1{
-    width:max-content;
+#banner1 {
+    width: max-content;
     height: max-content;
     display: flex;
     justify-content: center;
@@ -212,33 +221,36 @@ body {
     flex-direction: row;
 }
 
-#banner1 > p{
+#banner1>p {
     font-size: 50px;
 }
 
 @keyframes fade-in-out {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    display: none;
-  }
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        display: none;
+    }
 }
 
 
-#loadingInfo{
+#loadingInfo {
     color: #495c69;
     margin-top: 100px;
     font-size: 15px;
 }
 
-#maincav{
+#maincav {
     z-index: 199;
 }
