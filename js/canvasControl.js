@@ -87,7 +87,7 @@ class Screen {
 
         context.fillStyle = "black";
         context.font = "60px sans-serif";
-        context.fillText(this.imgInfo[cnt]["学生姓名"]+" "+this.imgInfo[cnt]['作品名称']+" 指导老师："+this.imgInfo[cnt]['作品指导教师'], 50, this.height - 20);
+        context.fillText((this.imgInfo[cnt]["学生姓名"]||"佚名")+" "+(this.imgInfo[cnt]['作品名称']||"无题")+" 指导老师："+(this.imgInfo[cnt]['作品指导教师']||"佚名"), 50, this.height - 20);
         this.point+=1;
         if(this.point==this.pics.length){
             this.point=0;
