@@ -1,5 +1,5 @@
 {
-    "isDefaultOpenConsole": true,
+    "isDefaultOpenConsole": false,
     "isStopAtLoadingPage": false,
     "isLoad3DScene": true,
     "isShowLogo": false,

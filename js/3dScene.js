@@ -45,6 +45,56 @@ function sleep(n) {
     // console.log('休眠后:' + new Date().getTime());
 }
 
+
+function initializeJoystick(controls) {
+    var joystick = document.getElementById('joystick');
+    var stick = document.getElementById('stick');
+    var originX = joystick.offsetLeft + joystick.offsetWidth / 2;
+    var originY = joystick.offsetTop + joystick.offsetHeight / 2;
+    var isDragging = false;
+
+    joystick.addEventListener('mousedown', startDrag);
+    joystick.addEventListener('touchstart', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+
+    function startDrag(event) {
+      event.preventDefault();
+      isDragging = true;
+    }
+
+    function drag(event) {
+      if (!isDragging) return;
+
+      var touch = event.type === 'touchmove' ? event.touches[0] : event;
+      var x = touch.clientX - originX;
+      var y = touch.clientY - originY;
+      var distance = Math.sqrt(x * x + y * y);
+      var maxDistance = joystick.offsetWidth / 2;
+
+      if (distance > maxDistance) {
+        var angle = Math.atan2(y, x);
+        x = Math.cos(angle) * maxDistance;
+        y = Math.sin(angle) * maxDistance;
+      }
+      x -= stick.offsetWidth / 2;
+      y -= stick.offsetHeight / 2;
+
+      stick.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+      controls.moveForward(0.001*(-y));
+      controls.moveRight(0.001*x)
+    }
+
+    function stopDrag(event) {
+      if (!isDragging) return;
+
+      stick.style.transform = 'translate(-50%, -50%)';
+      isDragging = false;
+    }
+  }
+
 //Mobile device detection
 function isMobileUserAgent() {
     const mobileKeywords = [
@@ -92,7 +142,7 @@ function showCameraInfo() {
 
 // Function to check if the camera is within the boundaries
 function checkBoundaries() {
-    return
+    // return;
     const position = camera.position;
     if (
         position.x < spaceBoundaries.minX ||
@@ -139,11 +189,9 @@ export function onloading(CONFIG) {
     }
 
     if (isMobile) {
-        document.getElementById("left").style.display = "block";
-        document.getElementById("right").style.display = "block";
-        document.getElementById("forward").style.display = "block";
-        document.getElementById("backward").style.display = "block";
+        document.getElementById("joystick").style.display = "block";
     }
+    var controls;
     if (CONFIG.isLoad3DScene) {
         //3D Model Load and display
 
@@ -185,7 +233,7 @@ export function onloading(CONFIG) {
         //Controls for different Device
         // PC
         // Create controls
-        const controls = new PointerLockControls(camera, document.body);
+        controls = new PointerLockControls(camera, document.body);
         scene.add(controls.getObject());
 
         // Enable pointer lock
@@ -267,24 +315,8 @@ export function onloading(CONFIG) {
             controls.moveForward(-1);
             checkBoundaries();
         };
-
-        const moveLeft = () => {
-            controls.moveRight(-1);
-            checkBoundaries();
-        };
-
-        //Moblie
-
-        document.getElementById("left").onclick = () => {
-            camera.rotation.y += 0.35;
-        };
-
-        document.getElementById("right").onclick = () => {
-            camera.rotation.y -= 0.35;
-        };
-
-        document.getElementById("forward").onclick = moveForward;
-        document.getElementById("backward").onclick = moveBackward;
+        
+        //TODO
 
         //3D Scene Setting
         // Create ambient light
@@ -305,11 +337,49 @@ export function onloading(CONFIG) {
             (isFinishModel || !CONFIG.isLoad3DScene) &&
             !CONFIG.isStopAtLoadingPage
         ) {
+            //Slider
+            var lastTouchPosition = { x: 0, y: 0 };
+            var rendererElement = renderer.domElement;
+            rendererElement.addEventListener(
+                "touchstart",
+                function (event) {
+                    // 获取触摸点的位置
+                    var touch = event.touches[0];
+                    lastTouchPosition.x = touch.clientX;
+                    lastTouchPosition.y = touch.clientY;
+                },
+                false
+            );
+
+            // 监听触摸移动事件
+            rendererElement.addEventListener(
+                "touchmove",
+                function (event) {
+                    // 获取触摸点的位置
+                    var touch = event.touches[0];
+
+                    // 计算触摸移动的偏移量
+                    var deltaX = touch.clientX - lastTouchPosition.x;
+
+                    // 根据偏移量更新摄像机的旋转
+                    camera.rotation.y += deltaX * 0.005; // 调整旋转速度
+
+                    // 更新上一次触摸事件的位置
+                    lastTouchPosition.x = touch.clientX;
+                    lastTouchPosition.y = touch.clientY;
+                },
+                false
+            );
+            initializeJoystick(controls);
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
             cpt.canvasInitPaint(CONFIG.screens, scene);
-            setInterval(()=>{cpt.canvasRender()},CONFIG.canvasMSPF)
-            setInterval(()=>{cpt.canvasUpdate()},CONFIG.canvasUpdateDelay)
+            setInterval(() => {
+                cpt.canvasRender();
+            }, CONFIG.canvasMSPF);
+            setInterval(() => {
+                cpt.canvasUpdate();
+            }, CONFIG.canvasUpdateDelay);
         }
     }, 100);
 }
