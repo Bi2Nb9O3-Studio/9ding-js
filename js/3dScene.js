@@ -69,7 +69,6 @@ function isMobileUserAgent() {
 function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    cpt.canvasRender();
 }
 
 //Utilities
@@ -309,6 +308,8 @@ export function onloading(CONFIG) {
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
             cpt.canvasInitPaint(CONFIG.screens, scene);
+            setInterval(()=>{cpt.canvasRender()},CONFIG.canvasMSPF)
+            setInterval(()=>{cpt.canvasUpdate()},CONFIG.canvasUpdateDelay)
         }
     }, 100);
 }

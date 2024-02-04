@@ -1,5 +1,5 @@
 {
-    "isDefaultOpenConsole": true,
+    "isDefaultOpenConsole": false,
     "isStopAtLoadingPage": false,
     "isLoad3DScene": true,
     "isShowLogo": false,
@@ -7,6 +7,9 @@
     "freecam": true,
     "screens": [
         [[1480,860],[0.25,1.75,-1.23],[0,90,0]],
-        [[1480,860],[0.25,1.75,-3.0] ,[0,90,0]]
-    ]
+        [[1480,860],[0.25,1.75,-3.0] ,[0,90,0]],
+        [[1480,860],[0.25,1.75,-4.77] ,[0,90,0]]
+    ],
+    "canvasMSPF":500,
+    "canvasUpdateDelay":5000
 }

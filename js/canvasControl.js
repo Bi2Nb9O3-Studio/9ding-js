@@ -36,27 +36,8 @@ class Screen {
         this.canvas.height = this.height;
         this.padding = padding;
         this.imgInfo = imgInfo;
-        var context = this.canvas.getContext("2d");
-        context.fillStyle = "#c7e8ff";
-        context.fillRect(0, 0, this.width, this.height);
-        context.drawImage(
-            this.pics[0],
-            (this.width -
-                parseInt(
-                    (
-                        (this.height - this.padding) *
-                        (pics[0].width / pics[0].height)
-                    ).toFixed(0)
-                )) /
-                2,
-            0,
-            (this.height - this.padding) * (pics[0].width / pics[0].height),
-            this.height - this.padding
-        );
-
-        context.fillStyle = "black";
-        context.font = "60px sans-serif";
-        context.fillText(this.imgInfo[0]["学生姓名"], 50, this.height - 20);
+        this.point = 0;
+        this.screenContent();
         var texture = new THREE.CanvasTexture(this.canvas);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
@@ -75,10 +56,6 @@ class Screen {
         this.obj.rotation.x = objInfo[1][0] * (Math.PI/180);
         this.obj.rotation.y = objInfo[1][1] * (Math.PI/180);
         this.obj.rotation.z = objInfo[1][2] * (Math.PI/180);
-        // this.obj.rotation.x = objInfo[1][0];
-        // this.obj.rotation.y = objInfo[1][1];
-        // this.obj.rotation.z = objInfo[1][2];
-        // this.obj.rotation.y = 1;
 
         this.scene.add(this.obj);
         this.obj.material.needsUpdate = true;
@@ -86,6 +63,35 @@ class Screen {
 
     render(){
         this.obj.material.map.needsUpdate = true;
+    }
+
+    screenContent(){
+        var cnt=this.point;
+        var context = this.canvas.getContext("2d");
+        context.fillStyle = "#c7e8ff";
+        context.fillRect(0, 0, this.width, this.height);
+        context.drawImage(
+            this.pics[cnt],
+            (this.width -
+                parseInt(
+                    (
+                        (this.height - this.padding) *
+                        (this.pics[cnt].width / this.pics[cnt].height)
+                    ).toFixed(0)
+                )) /
+                2,
+            0,
+            (this.height - this.padding) * (this.pics[cnt].width / this.pics[cnt].height),
+            this.height - this.padding
+        );
+
+        context.fillStyle = "black";
+        context.font = "60px sans-serif";
+        context.fillText(this.imgInfo[cnt]["学生姓名"]+" "+this.imgInfo[cnt]['作品名称']+" 指导老师："+this.imgInfo[cnt]['作品指导教师'], 50, this.height - 20);
+        this.point+=1;
+        if(this.point==this.pics.length){
+            this.point=0;
+        }
     }
 }
 
@@ -110,6 +116,7 @@ export class CanvasPainter {
     /**
      * @description 加载信息
      */
+    
 
     loadInfo() {
         let self = this;
@@ -223,6 +230,13 @@ export class CanvasPainter {
         }
         self.screens.forEach((e)=>{
             e.render();
+        })
+    }
+
+    canvasUpdate(){
+        // console.log(this)
+        this.screens.forEach((ele)=>{
+            ele.screenContent();
         })
     }
 }
