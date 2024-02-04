@@ -92,7 +92,7 @@ function showCameraInfo() {
 
 // Function to check if the camera is within the boundaries
 function checkBoundaries() {
-    // return
+    return
     const position = camera.position;
     if (
         position.x < spaceBoundaries.minX ||
