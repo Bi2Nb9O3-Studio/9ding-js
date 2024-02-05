@@ -84,7 +84,8 @@ function initializeJoystick(controls) {
 
       stick.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
       controls.moveForward(0.001*(-y));
-      controls.moveRight(0.001*x)
+      controls.moveRight(0.0005*x)
+      checkBoundaries()
     }
 
     function stopDrag(event) {
