@@ -238,3 +238,21 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.Icontainer {
+    width: 100vw;
+    height: 100vh;
+    background-color: #0000005d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.instruction {
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow: 27px 27px 54px #989898,
+        -27px -27px 54px #ffffff;
+    width: 60%;
+    height: 60%;
+}

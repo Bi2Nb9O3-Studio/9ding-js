@@ -3,6 +3,7 @@ import { GLTFLoader } from "/js/lib/GLTFLoader.js";
 import { PointerLockControls } from "/js/lib/PointerLockControls.js";
 import * as CANTOL from "/js/canvasControl.js";
 import * as LOGGER from "/js/logging.js";
+import * as DetailWindow from "/js/detailWindow.js";
 //Public Variables
 
 // Create a scene
@@ -45,56 +46,55 @@ function sleep(n) {
     // console.log('休眠后:' + new Date().getTime());
 }
 
-
 function initializeJoystick(controls) {
-    var joystick = document.getElementById('joystick');
-    var stick = document.getElementById('stick');
+    var joystick = document.getElementById("joystick");
+    var stick = document.getElementById("stick");
     var originX = joystick.offsetLeft + joystick.offsetWidth / 2;
     var originY = joystick.offsetTop + joystick.offsetHeight / 2;
     var isDragging = false;
 
-    joystick.addEventListener('mousedown', startDrag);
-    joystick.addEventListener('touchstart', startDrag);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag);
-    document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchend', stopDrag);
+    joystick.addEventListener("mousedown", startDrag);
+    joystick.addEventListener("touchstart", startDrag);
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("touchmove", drag);
+    document.addEventListener("mouseup", stopDrag);
+    document.addEventListener("touchend", stopDrag);
 
     function startDrag(event) {
-      event.preventDefault();
-      isDragging = true;
+        event.preventDefault();
+        isDragging = true;
     }
 
     function drag(event) {
-      if (!isDragging) return;
+        if (!isDragging) return;
 
-      var touch = event.type === 'touchmove' ? event.touches[0] : event;
-      var x = touch.clientX - originX;
-      var y = touch.clientY - originY;
-      var distance = Math.sqrt(x * x + y * y);
-      var maxDistance = joystick.offsetWidth / 2;
+        var touch = event.type === "touchmove" ? event.touches[0] : event;
+        var x = touch.clientX - originX;
+        var y = touch.clientY - originY;
+        var distance = Math.sqrt(x * x + y * y);
+        var maxDistance = joystick.offsetWidth / 2;
 
-      if (distance > maxDistance) {
-        var angle = Math.atan2(y, x);
-        x = Math.cos(angle) * maxDistance;
-        y = Math.sin(angle) * maxDistance;
-      }
-      x -= stick.offsetWidth / 2;
-      y -= stick.offsetHeight / 2;
+        if (distance > maxDistance) {
+            var angle = Math.atan2(y, x);
+            x = Math.cos(angle) * maxDistance;
+            y = Math.sin(angle) * maxDistance;
+        }
+        x -= stick.offsetWidth / 2;
+        y -= stick.offsetHeight / 2;
 
-      stick.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-      controls.moveForward(0.001*(-y));
-      controls.moveRight(0.0005*x)
-      checkBoundaries()
+        stick.style.transform = "translate(" + x + "px, " + y + "px)";
+        controls.moveForward(0.001 * -y);
+        controls.moveRight(0.0005 * x);
+        checkBoundaries();
     }
 
     function stopDrag(event) {
-      if (!isDragging) return;
+        if (!isDragging) return;
 
-      stick.style.transform = 'translate(-50%, -50%)';
-      isDragging = false;
+        stick.style.transform = "translate(-50%, -50%)";
+        isDragging = false;
     }
-  }
+}
 
 //Mobile device detection
 function isMobileUserAgent() {
@@ -236,9 +236,32 @@ export function onloading(CONFIG) {
         // Create controls
         controls = new PointerLockControls(camera, document.body);
         scene.add(controls.getObject());
-
         // Enable pointer lock
         document.addEventListener("click", function () {
+            if (isMobile) return;
+            if (controls.isLocked) {
+                console.log(getObjectInsight());
+                var goi = getObjectInsight();
+                goi.forEach((element) => {
+                    if (element.object.name.indexOf("scr") != -1) {
+                        var num = parseInt(element.object.name.slice(3));
+                        DetailWindow.displayArtworkInfo(
+                            "暂无",
+                            cpt.screens[num].imgInfo[cpt.screens[num].point][
+                                "学生姓名"
+                            ],
+                            cpt.screens[num].imgInfo[cpt.screens[num].point][
+                                "指导老师"
+                            ],
+                            "暂无",
+                            cpt.screens[num].pics[cpt.screens[num].point]
+                        );
+                    }
+                });
+            }
+        });
+
+        document.getElementById("maincav").addEventListener("click", () => {
             if (isMobile) return;
             controls.lock();
         });
@@ -316,8 +339,6 @@ export function onloading(CONFIG) {
             controls.moveForward(-1);
             checkBoundaries();
         };
-        
-        //TODO
 
         //3D Scene Setting
         // Create ambient light
