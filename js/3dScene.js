@@ -251,7 +251,7 @@ export function onloading(CONFIG) {
                                 "学生姓名"
                             ],
                             cpt.screens[num].imgInfo[cpt.screens[num].point][
-                                "指导老师"
+                                "作品指导老师"
                             ],
                             "暂无",
                             cpt.screens[num].pics[cpt.screens[num].point]
