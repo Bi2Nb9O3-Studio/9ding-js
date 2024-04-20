@@ -1,10 +1,10 @@
+// Import necessary modules and libraries
 import * as THREE from "/js/lib/three.module.js";
 import { GLTFLoader } from "/js/lib/GLTFLoader.js";
 import { PointerLockControls } from "/js/lib/PointerLockControls.js";
 import * as CANTOL from "/js/canvasControl.js";
 import * as LOGGER from "/js/logging.js";
 import * as DetailWindow from "/js/detailWindow.js";
-//Public Variables
 
 // Create a scene
 let cpt = new CANTOL.CanvasPainter(1, 20, "/static/img/1/info.json");
@@ -35,17 +35,17 @@ const spaceBoundaries = {
 
 //Public Functions ==========================
 
+// Function to pause execution for a given time
 function sleep(n) {
     var start = new Date().getTime();
-    //  console.log('休眠前:' + start);
     while (true) {
         if (new Date().getTime() - start > n) {
             break;
         }
     }
-    // console.log('休眠后:' + new Date().getTime());
 }
 
+// Function to initialize joystick controls
 function initializeJoystick(controls) {
     var joystick = document.getElementById("joystick");
     var stick = document.getElementById("stick");
@@ -96,7 +96,7 @@ function initializeJoystick(controls) {
     }
 }
 
-//Mobile device detection
+// Function to check if the user is on a mobile device
 function isMobileUserAgent() {
     const mobileKeywords = [
         "mobile",
@@ -143,7 +143,6 @@ function showCameraInfo() {
 
 // Function to check if the camera is within the boundaries
 function checkBoundaries() {
-    // return;
     const position = camera.position;
     if (
         position.x < spaceBoundaries.minX ||
@@ -164,6 +163,7 @@ function checkBoundaries() {
     }
 }
 
+// Function to get objects in the camera's view
 function getObjectInsight() {
     const cameraPosition = camera.position;
     const cameraDirection = new THREE.Vector3();
@@ -174,15 +174,14 @@ function getObjectInsight() {
     return intersects;
 }
 
+// Event listener for window resize
 window.addEventListener("resize", () => {
-    // 重置渲染器宽高比
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // 重置相机宽高比
     camera.aspect = window.innerWidth / window.innerHeight;
-    // 更新相机投影矩阵
     camera.updateProjectionMatrix();
 });
 
+// Function to be executed on page loading
 export function onloading(CONFIG) {
     let isMobile = false;
     if (window.innerWidth / window.innerWidth < 1 || isMobileUserAgent()) {
@@ -215,8 +214,6 @@ export function onloading(CONFIG) {
                     "模型加载完成";
             },
             function (xhr) {
-                // 控制台查看加载进度xhr
-                // 通过加载进度xhr可以控制前端进度条进度
                 const percent = xhr.loaded / xhr.total;
                 document.getElementById("modelloadingtext").innerText =
                     (percent * 100).toFixed(4) + "%";
@@ -231,11 +228,13 @@ export function onloading(CONFIG) {
                 console.error(error);
             }
         );
+
         //Controls for different Device
         // PC
         // Create controls
         controls = new PointerLockControls(camera, document.body);
         scene.add(controls.getObject());
+
         // Enable pointer lock
         document.addEventListener("click", function () {
             if (isMobile) return;
@@ -329,6 +328,7 @@ export function onloading(CONFIG) {
                 checkBoundaries();
             }
         }, 10);
+
         // Add event listeners for keyboard controls
         const moveForward = () => {
             controls.moveForward(1);
@@ -349,8 +349,10 @@ export function onloading(CONFIG) {
         const directionalLight = new THREE.DirectionalLight(0xffeedd);
         directionalLight.position.set(0, 0, 1);
         scene.add(directionalLight);
+
         animate(renderer, scene, camera);
     }
+
     //Canvas
     cpt.loadInfo();
     var loopLoadingScan = setInterval(() => {
@@ -365,7 +367,6 @@ export function onloading(CONFIG) {
             rendererElement.addEventListener(
                 "touchstart",
                 function (event) {
-                    // 获取触摸点的位置
                     var touch = event.touches[0];
                     lastTouchPosition.x = touch.clientX;
                     lastTouchPosition.y = touch.clientY;
@@ -373,25 +374,18 @@ export function onloading(CONFIG) {
                 false
             );
 
-            // 监听触摸移动事件
             rendererElement.addEventListener(
                 "touchmove",
                 function (event) {
-                    // 获取触摸点的位置
                     var touch = event.touches[0];
-
-                    // 计算触摸移动的偏移量
                     var deltaX = touch.clientX - lastTouchPosition.x;
-
-                    // 根据偏移量更新摄像机的旋转
-                    camera.rotation.y += deltaX * 0.005; // 调整旋转速度
-
-                    // 更新上一次触摸事件的位置
+                    camera.rotation.y += deltaX * 0.005;
                     lastTouchPosition.x = touch.clientX;
                     lastTouchPosition.y = touch.clientY;
                 },
                 false
             );
+
             initializeJoystick(controls);
             $("#loading").fadeOut();
             clearInterval(loopLoadingScan);
