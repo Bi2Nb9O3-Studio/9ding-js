@@ -15,5 +15,17 @@
         [[1620,1000],[12.35,1.5,-6.85],[0,0,0]]
     ],
     "canvasMSPF":500,
-    "canvasUpdateDelay":5000
+    "canvasUpdateDelay":5000,
+    "loadItems":{
+        "scene":["./static/models/model.glb"],
+        "images":[["./static/img/1/",20]],
+        "models":["./static/"]
+    },
+    "spaceBoundaries":{
+    "minX": 0.35,
+    "maxX": 16.25,
+    "minZ": -6.63,
+    "maxZ": -0.5
+    },
+    "cameraPosition":[3,2,-0.5]
 }
