@@ -1,5 +1,8 @@
+import { $ } from "./jquery-3.5.1.min.js";
+
 /**
  * 九鼎展厅
+ * @name $Exhibition
  */
 
 export class $Exhibition {
@@ -9,55 +12,17 @@ export class $Exhibition {
      * @param {string} configURL
      */
     constructor(configURL) {
-        this.configURL = configURL;
-        this.config = 0;
+        this.config = new _Config(configURL);
     }
 
     init() {
         this.$nsba();
-        this.loadConfig();
+        this.config.loadConfig().then((config) => {
+            // todo
+        }).catch((error) => {
+            //todo
+        });
     }
-
-    /**
-     * @name loadConfig
-     * @description 加载配置文件
-     *
-     * @param {loadConfigCallback} callback
-     */
-    loadConfig(callback = null) {
-        if (callback == null) {
-            console.warn("Callback is null, this may cause some problems.");
-            callback = (config, error) => {
-                if (error != null) {
-                    throw error;
-                }
-            };
-        }
-        try {
-            let xhr = new XMLHttpRequest();
-            // 第二步: 调用open函数 指定请求方式 与URL地址
-            xhr.open("GET", "/config.json", true);
-            xhr.setRequestHeader("If-Modified-Since", "0");
-            // 第三步: 调用send函数 发起ajax请求
-            xhr.send();
-            // 第四步: 监听onreadystatechange事件
-            xhr.onreadystatechange = function () {
-                // 监听xhr对象的请求状态 与服务器的响应状态
-                if (this.readyState == 4 && this.status == 200) {
-                    // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
-                    config = JSON.parse(this.response);
-                    callback(config, null);
-                }
-            };
-        } catch (error) {
-            callback(null, error);
-        }
-    }
-    /**
-     * @callback loadConfigCallback
-     * @param {Object|null} config
-     * @param {Error|null} error
-     */
 
     /**
      * @name NSBA
@@ -145,5 +110,94 @@ export class $Exhibition {
             38,
             "Is Opera"
         );
+    }
+}
+
+class _Config {
+    /**
+     *
+     * @param {string} configURL 配置文件的URL
+     * @param {Array|null} protectKeyList 被保护的键列表
+     * @param {Array|null} readOnlyKeyList 只读的键列表
+     */
+    constructor(configURL, protectKeyList, readOnlyKeyList) {
+        this.configURL = configURL;
+        this.protectKeyList = protectKeyList | [];
+        this.readOnlyKeyList = readOnlyKeyList | [];
+        this.loaded = 0;
+    }
+
+    /**
+     * @name loadConfig
+     * @description 加载配置文件
+     *
+     * @returns {Promise}
+     * @async
+     */
+    loadConfig() {
+        let self = this;
+        return Promise((resolve, reject) => {
+            try {
+                let xhr = new XMLHttpRequest();
+                // 第二步: 调用open函数 指定请求方式 与URL地址
+                xhr.open("GET", "/config.json", true);
+                xhr.setRequestHeader("If-Modified-Since", "0");
+                // 第三步: 调用send函数 发起ajax请求
+                xhr.send();
+                // 第四步: 监听onreadystatechange事件
+                xhr.onreadystatechange = function () {
+                    // 监听xhr对象的请求状态 与服务器的响应状态
+                    if (this.readyState == 4 && this.status == 200) {
+                        // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
+                        config = JSON.parse(this.response);
+                        self.loaded = 1;
+                        resolve(config);
+                    }
+                };
+            } catch (error) {
+                reject(error);
+            }
+
+        })
+    }
+
+    /**
+     * @name getValue
+     *
+     * @param {string} key
+     * @static
+     * @public
+     */
+
+    getValue(key) {
+        if (
+            this.protectKeyList.includes(key) ||
+            this.readOnlyKeyList.includes(key)
+        ) {
+            return this.config[key];
+        } else {
+            console.warn(
+                "An attempt to access a protected key " + key.toString() + "."
+            );
+            return null;
+        }
+    }
+
+    /**
+     * @name setValue
+     *
+     * @param {string} key
+     * @param {string} value
+     * @static
+     * @public
+     */
+    setValue(key, value) {
+        if (this.protectKeyList.includes(key)) {
+            console.warn(
+                "An attempt to modify a protected key " + key.toString() + "."
+            );
+            return null;
+        }
+        this.config[key] = value;
     }
 }
