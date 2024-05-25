@@ -1,0 +1,22 @@
+{
+    "picFolder": [
+        "resources/images/",
+        "resources/images1/"
+    ],
+    "canvasElementID": "canvas",
+    "camera": {
+        "FOV": 75,
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "near": 0.1,
+        "far": 1000
+    },
+    "spaceBoundaries": {
+        "minX": 0.35,
+        "maxX": 16.25,
+        "minZ": -6.63,
+        "maxZ": -0.5
+    },
+    "modelURL":"resources/models/"
+}
