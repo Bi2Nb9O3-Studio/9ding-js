@@ -1,0 +1,9 @@
+.eslintrc.js
+.prettierrc.js
+babel.config.js
+vetur.config.js
+/node_modules/
+.prettierrc.js
+.vscode/*
+package-lock.json
+package.json

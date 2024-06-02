@@ -1,19 +1,9 @@
 
-document.getElementsByTagName("script").forEach(element => {
-    if (element.type == "importmap") {
-        ___import__map___ = JSON.parse(element.innerHTML);
-        //check if 'three' from cdn is imported
-        if (!___import__map___.imports["three"]) {
-            throw new Error("three.js is not imported from cdn");
-        }
-    }
-});
+import { Toastify } from "toastify";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+import * as THREE from "three";
 
-// import { $ } from "./lib/jquery.js";
-import "https://fastly.jsdelivr.net/npm/toastify-js";
-import * as THREE from "https://fastly.jsdelivr.net/npm/three@latest/build/three.min.js";
-import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
-import { PointerLockControls } from "https://unpkg.com/three@latest/examples/jsm/controls/PointerLockControls.js";
 function loadStyle(url) {
     var link = document.createElement("link");
     link.type = "text/css";
