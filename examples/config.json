@@ -1,8 +1,5 @@
 {
-    "picFolder": [
-        "resources/images/",
-        "resources/images1/"
-    ],
+    "picFolder": ["resources/images/", "resources/images1/"],
     "canvasElementID": "canvas",
     "camera": {
         "FOV": 75,
@@ -18,5 +15,5 @@
         "minZ": -6.63,
         "maxZ": -0.5
     },
-    "modelURL":"resources/models/"
+    "modelURL": "resources/models/"
 }
