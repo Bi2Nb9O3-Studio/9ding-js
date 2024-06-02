@@ -5,10 +5,10 @@ export default {
     output: {
         file: "bundle.js",
         format: "umd",
-        name: "9ding",
+        name: "9ding"
     },
     plugins: [
-        resolve(),
+        resolve()
         // externals(),
-    ],
+    ]
 };

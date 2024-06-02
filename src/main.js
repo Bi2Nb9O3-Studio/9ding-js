@@ -1,4 +1,3 @@
-
 import { Toastify } from "toastify";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
@@ -28,40 +27,36 @@ export class $Exhibition {
         this.config = new _Config(configURL);
         this.status = {
             model: 0,
-            pics: 0,
+            pics: 0
         };
         this.isMobile = false;
     }
 
     init() {
         this.$nsba();
-        this.isMobile =
-            this.$isMobileUserAgent() ||
-            window.innerWidth / window.innerWidth < 1;
+        this.isMobile = this.$isMobileUserAgent() || window.innerWidth / window.innerWidth < 1;
         this.config
             .loadConfig()
-            .then((config) => {
+            .then(config => {
                 Toastify({
                     className: "info",
                     text: "加载配置文件成功!",
                     duration: 3000,
                     style: {
-                        background:
-                            "linear-gradient(to right, #00b09b, #96c93d)",
+                        background: "linear-gradient(to right, #00b09b, #96c93d)"
                     },
-                    position: "center",
+                    position: "center"
                 }).showToast();
             })
-            .catch((error) => {
+            .catch(error => {
                 Toastify({
                     className: "error",
                     text: "加载配置文件失败!",
                     duration: 3000,
                     style: {
-                        background:
-                            "linear-gradient(to right, #FF416C, #FF4B2B)",
+                        background: "linear-gradient(to right, #FF416C, #FF4B2B)"
                     },
-                    position: "center",
+                    position: "center"
                 }).showToast();
             });
     }
@@ -74,13 +69,7 @@ export class $Exhibition {
      * @private
      */
     $isMobileUserAgent() {
-        const mobileKeywords = [
-            "mobile",
-            "android",
-            "iphone",
-            "ipad",
-            "windows phone",
-        ];
+        const mobileKeywords = ["mobile", "android", "iphone", "ipad", "windows phone"];
         const userAgent = navigator.userAgent.toLowerCase();
 
         for (const keyword of mobileKeywords) {
@@ -100,19 +89,14 @@ export class $Exhibition {
      */
     $nsba(alertHTML = null) {
         if (alertHTML == null) {
-            alertHTML = `<html><head><title>浏览器版本过低!</title><style>body{background-color:#87CEFA;font-family:Arial,sans-serif;margin:0;padding:0}.container{background-color:#fff;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.2);max-width:600px;margin:50px auto;padding:20px}h1{color:#333}p{color:#555}ul{list-style-type:none;padding:0}li{margin-bottom:10px}a{color:#007BFF;text-decoration:none}a:hover{text-decoration:underline}</style><meta charset="UTF-8"></head><body><div class="container"><h1>抱歉，您的浏览器版本过低！</h1><p>我们推荐您使用Firefox网络浏览器, 以获得更好的浏览体验和更高的安全性。</p><p>推荐使用以下浏览器：</p><ul><li>Google Chrome:<a href="https://www.google.cn/chrome/">下载链接</a></li><li>Firefox:<a href="https://www.mozilla.org/zh-CN/firefox">下载链接</a></li><!--在这里可以添加其他浏览器的下载链接--></ul></div></body></html>`;
+            alertHTML =
+                '<html><head><title>浏览器版本过低!</title><style>body{background-color:#87CEFA;font-family:Arial,sans-serif;margin:0;padding:0}.container{background-color:#fff;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.2);max-width:600px;margin:50px auto;padding:20px}h1{color:#333}p{color:#555}ul{list-style-type:none;padding:0}li{margin-bottom:10px}a{color:#007BFF;text-decoration:none}a:hover{text-decoration:underline}</style><meta charset="UTF-8"></head><body><div class="container"><h1>抱歉，您的浏览器版本过低！</h1><p>我们推荐您使用Firefox网络浏览器, 以获得更好的浏览体验和更高的安全性。</p><p>推荐使用以下浏览器：</p><ul><li>Google Chrome:<a href="https://www.google.cn/chrome/">下载链接</a></li><li>Firefox:<a href="https://www.mozilla.org/zh-CN/firefox">下载链接</a></li><!--在这里可以添加其他浏览器的下载链接--></ul></div></body></html>';
         }
 
         const show = () => {
             document.getElementsByTagName("html")[0].innerHTML = alertHTML;
         };
-        function checkBrowserVersion(
-            userAgent,
-            browserRegex,
-            versionRegex,
-            minimumVersion,
-            message
-        ) {
+        function checkBrowserVersion(userAgent, browserRegex, versionRegex, minimumVersion, message) {
             const browserMatch = userAgent.match(browserRegex);
             if (browserMatch) {
                 const versionMatch = userAgent.match(versionRegex);
@@ -135,22 +119,10 @@ export class $Exhibition {
         }
 
         // Chrome
-        checkBrowserVersion(
-            userAgent,
-            /Chrom(e|ium)\/(\d+)/,
-            /Chrom(e|ium)\/(\d+)/,
-            51,
-            "Is Chrome"
-        );
+        checkBrowserVersion(userAgent, /Chrom(e|ium)\/(\d+)/, /Chrom(e|ium)\/(\d+)/, 51, "Is Chrome");
 
         // Firefox
-        checkBrowserVersion(
-            userAgent,
-            /Firefox\/(\d+)/,
-            /Firefox\/(\d+)/,
-            54,
-            "Is Firefox"
-        );
+        checkBrowserVersion(userAgent, /Firefox\/(\d+)/, /Firefox\/(\d+)/, 54, "Is Firefox");
 
         // Safari
         checkBrowserVersion(
@@ -162,22 +134,10 @@ export class $Exhibition {
         ); // 注意：Safari的版本号可能包含在"Version/"中
 
         // Edge
-        checkBrowserVersion(
-            userAgent,
-            /Edg\/(\d+)/,
-            /Edg\/(\d+)/,
-            79,
-            "Is Edge"
-        );
+        checkBrowserVersion(userAgent, /Edg\/(\d+)/, /Edg\/(\d+)/, 79, "Is Edge");
 
         // Opera
-        checkBrowserVersion(
-            userAgent,
-            /OPR\/(\d+)/,
-            /OPR\/(\d+)/,
-            38,
-            "Is Opera"
-        );
+        checkBrowserVersion(userAgent, /OPR\/(\d+)/, /OPR\/(\d+)/, 38, "Is Opera");
     }
 
     /**
@@ -190,13 +150,10 @@ export class $Exhibition {
         return new Promise((resolve, reject) => {
             try {
                 this.scene = new THREE.Scene();
-                this.canvasElement = document.getElementById(
-                    this.config.getValue("canvasElementID")
-                );
+                this.canvasElement = document.getElementById(this.config.getValue("canvasElementID"));
                 this.camera = new THREE.PerspectiveCamera(
                     this.config.getValue("camera")["FOV"],
-                    this.canvasElement.clientWidth /
-                        this.canvasElement.clientHeight,
+                    this.canvasElement.clientWidth / this.canvasElement.clientHeight,
                     this.config.getValue("camera")["near"],
                     this.config.getValue("camera")["far"]
                 );
@@ -207,36 +164,29 @@ export class $Exhibition {
                 );
                 this.renderer = new THREE.WebGLRenderer({
                     canvas: this.canvasElement,
-                    antialias: true,
+                    antialias: true
                 });
                 this.spaceBounares = {
                     minX: this.config.getValue("spaceBoundaries")["minX"],
                     maxX: this.config.getValue("spaceBoundaries")["maxX"],
                     minY: this.config.getValue("spaceBoundaries")["minY"],
-                    maxY: this.config.getValue("spaceBoundaries")["maxY"],
+                    maxY: this.config.getValue("spaceBoundaries")["maxY"]
                 };
-                this.renderer.setSize(
-                    this.canvasElement.clientWidth,
-                    this.canvasElement.clientHeight
-                );
+                this.renderer.setSize(this.canvasElement.clientWidth, this.canvasElement.clientHeight);
 
-                this.$loadModelGLTF(this.config.getValue("modelURL"), (_) => {
+                this.$loadModelGLTF(this.config.getValue("modelURL"), _ => {
                     Toastify({
                         className: "info",
                         text: "加载模型文件成功!",
                         duration: 3000,
                         style: {
-                            background:
-                                "linear-gradient(to right, #00b09b, #96c93d)",
+                            background: "linear-gradient(to right, #00b09b, #96c93d)"
                         },
-                        position: "center",
+                        position: "center"
                     }).showToast();
                 });
 
-                this.controls = new PointerLockControls(
-                    this.camera,
-                    this.canvasElement
-                );
+                this.controls = new PointerLockControls(this.camera, this.canvasElement);
 
                 this.scene.add(this.controls.getObject());
 
@@ -246,19 +196,13 @@ export class $Exhibition {
                     //TODO api point
                 });
 
-                this.canvasElement.addEventListener("mousemove", (event) => {
+                this.canvasElement.addEventListener("mousemove", event => {
                     if (this.controls.isLocked === false) return;
                     this.$checkBoundaries();
                 });
 
                 this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-                this.scene.add(
-                    new THREE.DirectionalLight(0xffffff, 0.5).position.set(
-                        0,
-                        100,
-                        0
-                    )
-                );
+                this.scene.add(new THREE.DirectionalLight(0xffffff, 0.5).position.set(0, 100, 0));
             } catch (error) {
                 reject(error);
             }
@@ -283,15 +227,15 @@ export class $Exhibition {
         error = error || function (_) {};
         loader.load(
             modelURL,
-            (gltf) => {
+            gltf => {
                 self.scene.add(gltf.scene);
                 self.status["model"] = 1;
                 finish(gltf);
             },
-            (xhr) => {
+            xhr => {
                 progress(xhr);
             },
-            (_error) => {
+            _error => {
                 error(_error);
             }
         );
@@ -307,17 +251,11 @@ export class $Exhibition {
         ) {
             const newX = Math.max(
                 this.config.getValue("spaceBoundaries").minX,
-                Math.min(
-                    this.config.getValue("spaceBoundaries").maxX,
-                    position.x
-                )
+                Math.min(this.config.getValue("spaceBoundaries").maxX, position.x)
             );
             const newZ = Math.max(
                 this.config.getValue("spaceBoundaries").minZ,
-                Math.min(
-                    this.config.getValue("spaceBoundaries").maxZ,
-                    position.z
-                )
+                Math.min(this.config.getValue("spaceBoundaries").maxZ, position.z)
             );
             this.camera.position.set(newX, position.y, newZ);
         }
@@ -385,15 +323,10 @@ class _Config {
      */
 
     getValue(key) {
-        if (
-            this.protectKeyList.includes(key) ||
-            this.readOnlyKeyList.includes(key)
-        ) {
+        if (this.protectKeyList.includes(key) || this.readOnlyKeyList.includes(key)) {
             return this.config[key];
         } else {
-            console.warn(
-                "An attempt to access a protected key " + key.toString() + "."
-            );
+            console.warn("An attempt to access a protected key " + key.toString() + ".");
             return null;
         }
     }
@@ -408,9 +341,7 @@ class _Config {
      */
     setValue(key, value) {
         if (this.protectKeyList.includes(key)) {
-            console.warn(
-                "An attempt to modify a protected key " + key.toString() + "."
-            );
+            console.warn("An attempt to modify a protected key " + key.toString() + ".");
             return null;
         }
         this.config[key] = value;
