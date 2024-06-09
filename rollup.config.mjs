@@ -4,7 +4,7 @@ export default {
     input: "src/main.mjs",
     output: {
         file: "packageBuild/bundle.js",
-        format: "umd",
+        format: "esm",
         name: "9ding"
     },
     plugins: [

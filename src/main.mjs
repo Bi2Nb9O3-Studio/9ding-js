@@ -1,8 +1,7 @@
 import { Toastify } from "toastify";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import * as THREE from "three";
-
+import "three/examples/js/loaders/gltf/glTFLoader";
+import "three/examples/js/controls/PointerLockControls";
 function loadStyle(url) {
     var link = document.createElement("link");
     link.type = "text/css";
