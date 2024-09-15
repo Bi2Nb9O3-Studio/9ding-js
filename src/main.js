@@ -1,7 +1,9 @@
 import { Toastify } from "toastify";
-import * as THREE from "three";
 import "three/examples/js/loaders/gltf/glTFLoader";
 import "three/examples/js/controls/PointerLockControls";
+let THREE = require("three");
+
+
 function loadStyle(url) {
     var link = document.createElement("link");
     link.type = "text/css";
@@ -10,12 +12,13 @@ function loadStyle(url) {
     var head = document.getElementsByTagName("head")[0];
     head.appendChild(link);
 }
+
 loadStyle("https://fastly.jsdelivr.net/npm/toastify-js/src/toastify.min.css");
+
 /**
  * 九鼎展厅
  * @name $Exhibition
  */
-
 export class $Exhibition {
     /**
      *

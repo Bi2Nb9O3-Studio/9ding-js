@@ -131,3 +131,5 @@ dist
 **/packageBuild/*
 
 **/bundle.js
+
+**/tmp_**.**
