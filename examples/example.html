@@ -6,9 +6,11 @@
         <title>Document</title>
     </head>
     <body>
+        <canvas id="canvas" style="width: 100vw;height:100vh;"></canvas>
         <script type="module">
             import * as bundle from './bundle.js';
-            exhition = new bundle.$Exhibition("/examples/config.json");
+            var exhition = new bundle.$Exhibition("/examples/config.json");
+            exhition.init()
 
         </script>
         <canvas id="canvas" style="width: 100vw; height: 100vh"></canvas>

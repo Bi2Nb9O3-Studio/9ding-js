@@ -1,20 +1,8 @@
-import { Toastify } from "toastify";
-import "three/examples/js/loaders/gltf/glTFLoader";
-import "three/examples/js/controls/PointerLockControls";
-let THREE = require("three");
-
-
-function loadStyle(url) {
-    var link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = url;
-    var head = document.getElementsByTagName("head")[0];
-    head.appendChild(link);
-}
-
-loadStyle("https://fastly.jsdelivr.net/npm/toastify-js/src/toastify.min.css");
-
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+import * as THREE from "three";
+import "toastify-js/src/toastify.css";
+import "toastify-js";
 /**
  * 九鼎展厅
  * @name $Exhibition
@@ -25,6 +13,7 @@ export class $Exhibition {
      * @class
      * @param {string} configURL
      */
+
     constructor(configURL) {
         this.config = new _Config(configURL);
         this.status = {
@@ -292,11 +281,11 @@ class _Config {
      */
     loadConfig() {
         let self = this;
-        return Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
                 let xhr = new XMLHttpRequest();
                 // 第二步: 调用open函数 指定请求方式 与URL地址
-                xhr.open("GET", "/config.json", true);
+                xhr.open("GET", self.configURL, true);
                 xhr.setRequestHeader("If-Modified-Since", "0");
                 // 第三步: 调用send函数 发起ajax请求
                 xhr.send();
@@ -305,12 +294,13 @@ class _Config {
                     // 监听xhr对象的请求状态 与服务器的响应状态
                     if (this.readyState == 4 && this.status == 200) {
                         // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
-                        config = JSON.parse(this.response);
+                        var config = JSON.parse(this.response);
                         self.loaded = 1;
                         resolve(config);
                     }
                 };
             } catch (error) {
+                console.error(error);
                 reject(error);
             }
         });
