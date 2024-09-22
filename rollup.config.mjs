@@ -4,7 +4,7 @@ import postcss from "rollup-plugin-postcss";
 export default {
     input: "src/main.mjs",
     output: {
-        file: "packageBuild/bundle.js",
+        file: "build/bundle.js",
         format: "esm",
         name: "9ding"
     },
@@ -20,7 +20,7 @@ export default {
         postcss({
             // extract: "bundle.css",
             minimize: true
-        }),
+        })
         // externals(),
     ]
 };

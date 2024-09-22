@@ -3,11 +3,13 @@ import { PointerLockControls } from "three/examples/jsm/controls/PointerLockCont
 import * as THREE from "three";
 import "toastify-js/src/toastify.css";
 import "toastify-js";
+import Stats from "three/addons/libs/stats.module.js";
+
 /**
  * 九鼎展厅
  * @name $Exhibition
  */
-export class $Exhibition {
+class $Exhibition {
     /**
      *
      * @class
@@ -21,6 +23,11 @@ export class $Exhibition {
             pics: 0
         };
         this.isMobile = false;
+        this.$animate = () => {
+            this.renderer.render(this.scene, this.camera);
+            this.stats.update();
+            requestAnimationFrame(this.$animate);
+        };
     }
 
     init() {
@@ -38,6 +45,23 @@ export class $Exhibition {
                     },
                     position: "center"
                 }).showToast();
+                this.config.initConfig(config);
+                this.loadScence()
+                    .then(_ => {
+                        this.$startAnimate();
+                        console.log("加载场景成功!");
+                    })
+                    .catch(error => {
+                        Toastify({
+                            className: "error",
+                            text: "加载场景失败! " + error,
+                            duration: 3000,
+                            style: {
+                                background: "linear-gradient(to right, #FF416C, #FF4B2B)"
+                            },
+                            position: "center"
+                        }).showToast();
+                    });
             })
             .catch(error => {
                 Toastify({
@@ -179,7 +203,7 @@ export class $Exhibition {
 
                 this.controls = new PointerLockControls(this.camera, this.canvasElement);
 
-                this.scene.add(this.controls.getObject());
+                this.scene.add(this.controls.object);
 
                 this.canvasElement.addEventListener("click", () => {
                     if (this.isMobile) return;
@@ -193,7 +217,12 @@ export class $Exhibition {
                 });
 
                 this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-                this.scene.add(new THREE.DirectionalLight(0xffffff, 0.5).position.set(0, 100, 0));
+                var directLigt = new THREE.DirectionalLight(0xffffff, 0.5);
+                directLigt.position.set(0, 100, 0);
+                this.scene.add(directLigt);
+                this.stats = new Stats();
+                document.getElementById("cav").appendChild(this.stats.domElement)
+                resolve(null);
             } catch (error) {
                 reject(error);
             }
@@ -252,9 +281,8 @@ export class $Exhibition {
         }
     }
 
-    $animate() {
-        requestAnimationFrame(this.$animate);
-        this.renderer.render(this.scene, this.camera);
+    $startAnimate() {
+        this.$animate();
     }
 }
 
@@ -267,9 +295,10 @@ class _Config {
      */
     constructor(configURL, protectKeyList, readOnlyKeyList) {
         this.configURL = configURL;
-        this.protectKeyList = protectKeyList | [];
-        this.readOnlyKeyList = readOnlyKeyList | [];
+        this.protectKeyList = protectKeyList === undefined ? new Array() : protectKeyList;
+        this.readOnlyKeyList = readOnlyKeyList === undefined ? new Array() : readOnlyKeyList;
         this.loaded = 0;
+        this.config = {};
     }
 
     /**
@@ -307,6 +336,14 @@ class _Config {
     }
 
     /**
+     * @name initConfig
+     * @param {object} config
+     */
+    initConfig(config) {
+        this.config = config;
+    }
+
+    /**
      * @name getValue
      *
      * @param {string} key
@@ -315,7 +352,7 @@ class _Config {
      */
 
     getValue(key) {
-        if (this.protectKeyList.includes(key) || this.readOnlyKeyList.includes(key)) {
+        if (!(this.protectKeyList.includes(key) || this.readOnlyKeyList.includes(key))) {
             return this.config[key];
         } else {
             console.warn("An attempt to access a protected key " + key.toString() + ".");
@@ -339,3 +376,5 @@ class _Config {
         this.config[key] = value;
     }
 }
+
+export { $Exhibition };
