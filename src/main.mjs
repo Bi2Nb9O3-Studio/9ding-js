@@ -375,6 +375,7 @@ class _Config {
         }
         this.config[key] = value;
     }
+    //test
 }
 
 export { $Exhibition };
