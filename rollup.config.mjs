@@ -18,7 +18,7 @@ export default {
             // extract: "bundle.css",
             minimize: true
         }),
-        uglify(),
+        uglify()
         // obfuscator()
         // externals(),
     ]

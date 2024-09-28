@@ -11,7 +11,14 @@ export default [
                 ...globals.browser
             }
         },
-        ignores: [".eslintrc.js", ".prettierrc.js", "babel.config.js", "**/node_modules/**", "**/Deprecated/**"],
+        ignores: [
+            ".eslintrc.js",
+            ".prettierrc.js",
+            "babel.config.js",
+            "**/node_modules/**",
+            "**/Deprecated/**",
+            "**/build/**"
+        ],
         files: ["**/*.js"],
         rules: {
             ...eslintPluginPrettier.configs.recommended.rules,

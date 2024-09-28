@@ -1,8 +1,5 @@
 {
-    "picFolder": [
-        "resources/images/",
-        "resources/images1/"
-    ],
+    "picFolder": ["resources/images/", "resources/images1/"],
     "canvasElementID": "canvas",
     "camera": {
         "FOV": 75,

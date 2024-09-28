@@ -221,7 +221,7 @@ class $Exhibition {
                 directLigt.position.set(0, 100, 0);
                 this.scene.add(directLigt);
                 this.stats = new Stats();
-                document.getElementById("cav").appendChild(this.stats.domElement)
+                document.getElementById("cav").appendChild(this.stats.domElement);
                 resolve(null);
             } catch (error) {
                 reject(error);
