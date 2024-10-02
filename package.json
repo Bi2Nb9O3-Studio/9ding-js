@@ -8,8 +8,9 @@
     "scripts": {
         "check": "eslint . && prettier --check .",
         "fix": "eslint . --fix && prettier --write .",
-        "build": "rollup -c",
-        "build:types": "npx -p typescript tsc"
+        "build": "rollup -c && npx -p typescript tsc",
+        "build:types": "npx -p typescript tsc",
+        "build:rollup": "rollup -c"
     },
     "repository": {
         "type": "git",
