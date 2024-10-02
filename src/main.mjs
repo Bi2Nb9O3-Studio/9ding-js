@@ -28,6 +28,7 @@ class $Exhibition {
             this.stats.update();
             requestAnimationFrame(this.$animate);
         };
+        this.keypressed;
     }
 
     init() {
@@ -49,6 +50,7 @@ class $Exhibition {
                 this.loadScence()
                     .then(_ => {
                         this.$startAnimate();
+                        this.$startMotionCheck();
                         console.log("加载场景成功!");
                     })
                     .catch(error => {
@@ -74,6 +76,43 @@ class $Exhibition {
                     position: "center"
                 }).showToast();
             });
+    }
+
+    $startMotionCheck() {
+        this.keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
+        let that = this;
+        document.addEventListener("keydown", function (event) {
+            if (event.code == "KeyW" || event.code == "KeyS" || event.code == "KeyA" || event.code == "KeyD") {
+                that.keypressed[event.code] = 1;
+            }
+        });
+
+        document.addEventListener("keyup", event => {
+            if (event.code == "KeyW" || event.code == "KeyS" || event.code == "KeyA" || event.code == "KeyD") {
+                that.keypressed[event.code] = 0;
+            }
+        });
+
+        this.movdis = this.config.getValue("moveDistance");
+
+        this.motionCheck = setInterval(() => {
+            if (this.keypressed.KeyW) {
+                that.controls.moveForward(this.movdis);
+                that.$checkBoundaries();
+            }
+            if (this.keypressed.KeyA) {
+                that.controls.moveRight(-this.movdis);
+                that.$checkBoundaries();
+            }
+            if (this.keypressed.KeyS) {
+                that.controls.moveForward(-this.movdis);
+                that.$checkBoundaries();
+            }
+            if (this.keypressed.KeyD) {
+                that.controls.moveRight(this.movdis);
+                that.$checkBoundaries();
+            }
+        }, 10);
     }
 
     /**
@@ -165,7 +204,12 @@ class $Exhibition {
         return new Promise((resolve, reject) => {
             try {
                 this.scene = new THREE.Scene();
-                this.canvasElement = document.getElementById(this.config.getValue("canvasElementID"));
+                this.divEle = document.getElementById(this.config.getValue("divElementID"));
+                this.canvasElement = document.createElement("canvas");
+                this.canvasElement.style.width = "100%";
+                this.canvasElement.style.height = "100%";
+                // this.canvasElement.style.margin = "0";
+                this.divEle.appendChild(this.canvasElement);
                 this.camera = new THREE.PerspectiveCamera(
                     this.config.getValue("camera")["FOV"],
                     this.canvasElement.clientWidth / this.canvasElement.clientHeight,
@@ -221,7 +265,7 @@ class $Exhibition {
                 directLigt.position.set(0, 100, 0);
                 this.scene.add(directLigt);
                 this.stats = new Stats();
-                document.getElementById("cav").appendChild(this.stats.domElement);
+                this.divEle.appendChild(this.stats.domElement);
                 resolve(null);
             } catch (error) {
                 reject(error);
