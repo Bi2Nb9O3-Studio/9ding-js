@@ -370,11 +370,12 @@ class _Config {
      */
     setValue(key, value) {
         if (this.protectKeyList.includes(key)) {
-            console.warn("An attempt to modify a protected key " + key.toString() + ".");
+            console.error("An attempt to modify a protected key " + key.toString() + ".");
             return null;
         }
         this.config[key] = value;
     }
+    //test
 }
 
 export { $Exhibition };
