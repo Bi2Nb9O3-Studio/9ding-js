@@ -6,12 +6,7 @@
         <title>Document</title>
     </head>
     <body>
-        <div id="cav" style="width: 100vw; height: 100vh; margin: 0; padding: 0">
-            <canvas id="canvas" style="width: 100%; height: 100%">
-                Your browser does not support the HTML5 canvas element.
-            </canvas>
-        </div>
-
+        <ext id="cav" style="width: 100vw; height: 100vh; margin: 0; padding: 0"></ext>
         <script type="module">
             import * as bundle from "../build/bundle.js";
             var exhition = new bundle.$Exhibition("/examples/config.json");

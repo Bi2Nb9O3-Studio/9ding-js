@@ -1,6 +1,5 @@
 {
     "picFolder": ["resources/images/", "resources/images1/"],
-    "canvasElementID": "canvas",
     "camera": {
         "FOV": 75,
         "position": {
@@ -18,5 +17,6 @@
         "maxZ": -0.5
     },
     "modelURL": "../Deprecated/static/model/model.glb",
-    "divElementID": "cav"
+    "divElementID": "cav",
+    "moveDistance": 0.05
 }
