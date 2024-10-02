@@ -8,7 +8,8 @@
     "scripts": {
         "check": "eslint . && prettier --check .",
         "fix": "eslint . --fix && prettier --write .",
-        "build": "rollup -c"
+        "build": "rollup -c",
+        "build:types": "npx -p typescript tsc"
     },
     "repository": {
         "type": "git",
@@ -23,16 +24,17 @@
     "devDependencies": {
         "@eslint/js": "^9.10.0",
         "@lopatnov/rollup-plugin-uglify": "^2.1.5",
+        "@types/three": "^0.169.0",
         "eslint": "^9.10.0",
         "eslint-plugin-prettier": "^5.2.1",
         "globals": "^15.9.0",
         "rollup": "^4.21.3",
         "rollup-plugin-javascript-obfuscator": "^1.0.4",
-        "terser": "^5.33.0"
+        "terser": "^5.33.0",
+        "typescript": "^5.6.2"
     },
     "dependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
-        "@types/three": "^0.168.0",
         "eslint-config-prettier": "^9.1.0",
         "prettier": "^3.3.3",
         "rollup-plugin-node-externals": "^7.1.3",

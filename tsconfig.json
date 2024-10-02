@@ -1,0 +1,24 @@
+{
+  // 将此更改以匹配你的项目
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    // 告诉 TypeScript 读取 JS 文件，因为
+    // 通常它们被忽略为源文件
+    "allowJs": true,
+    // 生成 d.ts 文件
+    "declaration": true,
+    // 此编译器运行应
+    // 只输出 d.ts 文件
+    "emitDeclarationOnly": true,
+    // 类型应该进入此目录。
+    // 删除它会将 .d.ts 文件放置在
+    // 与 .js 文件相邻的位置
+    "outDir": "build/types",
+    // 在使用 IDE 功能时转到 js 文件，如
+    // VSCode 中的"转到定义"
+    "declarationMap": true,
+    "lib": ["es6","dom","ESNext"],
+    "moduleResolution": "Bundler",
+    "module": "ESNext"
+  }
+}
