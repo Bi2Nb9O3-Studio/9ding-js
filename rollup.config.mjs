@@ -6,11 +6,23 @@ import uglify from "@lopatnov/rollup-plugin-uglify";
 
 export default {
     input: "src/main.mjs",
-    output: {
-        file: "build/bundle.js",
-        format: "esm",
-        name: "9ding"
-    },
+    output: [
+        {
+            file: "build/bundle.js",
+            format: "esm",
+            name: "9ding"
+        },
+        {
+            file: "build/umd.js",
+            format: "umd",
+            name: "9ding"
+        },
+        {
+            file: "build/cjs.js",
+            format: "cjs",
+            name: "9ding"
+        }
+    ],
     context: "window",
     plugins: [
         resolve(),
