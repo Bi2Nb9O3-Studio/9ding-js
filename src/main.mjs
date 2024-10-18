@@ -4,7 +4,7 @@ import * as THREE from "three";
 import "toastify-js/src/toastify.css";
 import "toastify-js";
 import Stats from "three/addons/libs/stats.module.js";
-import {_Config} from "./config.mjs";
+import { _Config } from "./config.mjs";
 
 /**
  * 九鼎展厅
