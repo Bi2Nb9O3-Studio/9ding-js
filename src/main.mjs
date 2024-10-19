@@ -6,15 +6,13 @@ import "toastify-js";
 import Stats from "three/addons/libs/stats.module.js";
 import { _Config } from "./config.mjs";
 
-/**
- * 九鼎展厅
- * @name $Exhibition
- */
+/** Class represents a exhibition. */
 class $Exhibition {
     /**
      *
-     * @class
+     * 创建一个展馆实例
      * @param {string} configURL
+     * @constructor
      */
 
     constructor(configURL) {
@@ -31,6 +29,10 @@ class $Exhibition {
         };
         this.keypressed;
     }
+
+    /**
+     * 初始化
+     */
 
     init() {
         this.$nsba();
@@ -79,6 +81,9 @@ class $Exhibition {
             });
     }
 
+    /**
+     * 开始检测按键输入输出
+     */
     $startMotionCheck() {
         this.keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
         let that = this;
@@ -117,10 +122,8 @@ class $Exhibition {
     }
 
     /**
-     * @name isMobileUserAgent
-     * @description 检查是否是移动端用户代理
+     * 检查是否是移动端用户代理
      * @returns {boolean}
-     * @static
      * @private
      */
     $isMobileUserAgent() {
@@ -137,10 +140,10 @@ class $Exhibition {
     }
 
     /**
-     * @name NSBA
-     * @description 检查浏览器是否支持
+     * 检查浏览器是否支持
      *
-     * @param {string|null} alertHTML
+     * @param {string|null} alertHTML - 警告HTML
+     * @returns {void}
      */
     $nsba(alertHTML = null) {
         if (alertHTML == null) {
@@ -196,8 +199,7 @@ class $Exhibition {
     }
 
     /**
-     * @name loadScence
-     * @description 加载场景
+     * 加载场景
      * @async
      * @returns Promise<error|null>
      */
@@ -275,8 +277,7 @@ class $Exhibition {
     }
 
     /**
-     * @name loadModelGLTF
-     * @description 加载GLTF模型
+     * 加载GLTF模型
      * @param {string} modelURL
      * @param {function} finish
      * @param {function} progress
@@ -306,6 +307,10 @@ class $Exhibition {
         );
     }
 
+    /**
+     * 移动时边界检测
+     * @private
+     */
     $checkBoundaries() {
         const position = this.camera.position;
         if (

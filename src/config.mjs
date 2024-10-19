@@ -14,8 +14,7 @@ class _Config {
     }
 
     /**
-     * @name loadConfig
-     * @description 加载配置文件
+     * 加载配置文件
      *
      * @returns {Promise<error|object>}
      * @async
@@ -48,7 +47,7 @@ class _Config {
     }
 
     /**
-     * @name initConfig
+     * 初始化配置
      * @param {object} config
      */
     initConfig(config) {
@@ -56,7 +55,7 @@ class _Config {
     }
 
     /**
-     * @name getValue
+     * 获取值
      *
      * @param {string} key
      * @static
@@ -73,7 +72,7 @@ class _Config {
     }
 
     /**
-     * @name setValue
+     * 设定值(本地)
      *
      * @param {string} key
      * @param {string} value
