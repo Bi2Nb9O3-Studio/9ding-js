@@ -8,9 +8,10 @@
     "scripts": {
         "check": "eslint . && prettier --check .",
         "fix": "eslint . --fix && prettier --write .",
-        "build": "rollup -c && npx -p typescript tsc",
+        "build": "rollup -c && npx -p typescript tsc && npx jsdoc -r ./src -d ./build/doc -c jsdoc.json --verbose",
         "build:types": "npx -p typescript tsc",
-        "build:rollup": "rollup -c"
+        "build:rollup": "rollup -c",
+        "build:jsdoc": "npx jsdoc -r ./src -d ./build/doc -c jsdoc.json --verbose"
     },
     "repository": {
         "type": "git",
@@ -29,8 +30,10 @@
         "eslint": "^9.10.0",
         "eslint-plugin-prettier": "^5.2.1",
         "globals": "^15.9.0",
+        "minami": "^1.2.3",
         "rollup": "^4.21.3",
         "rollup-plugin-javascript-obfuscator": "^1.0.4",
+        "taffydb": "^2.7.3",
         "terser": "^5.33.0",
         "typescript": "^5.6.2"
     },
@@ -43,5 +46,6 @@
         "three": "^0.168.0",
         "three.js": "^0.77.1",
         "toastify-js": "^1.12.0"
-    }
+    },
+    "types": "./build/types"
 }

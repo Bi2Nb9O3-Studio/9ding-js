@@ -4,16 +4,15 @@ import * as THREE from "three";
 import "toastify-js/src/toastify.css";
 import "toastify-js";
 import Stats from "three/addons/libs/stats.module.js";
+import { _Config } from "./config.mjs";
 
-/**
- * 九鼎展厅
- * @name $Exhibition
- */
+/** Class represents a exhibition. */
 class $Exhibition {
     /**
      *
-     * @class
+     * 创建一个展馆实例
      * @param {string} configURL
+     * @constructor
      */
 
     constructor(configURL) {
@@ -30,6 +29,10 @@ class $Exhibition {
         };
         this.keypressed;
     }
+
+    /**
+     * 初始化
+     */
 
     init() {
         this.$nsba();
@@ -78,6 +81,9 @@ class $Exhibition {
             });
     }
 
+    /**
+     * 开始检测按键输入输出
+     */
     $startMotionCheck() {
         this.keypressed = { KeyW: 0, KeyS: 0, KeyA: 0, KeyD: 0 };
         let that = this;
@@ -116,10 +122,8 @@ class $Exhibition {
     }
 
     /**
-     * @name isMobileUserAgent
-     * @description 检查是否是移动端用户代理
+     * 检查是否是移动端用户代理
      * @returns {boolean}
-     * @static
      * @private
      */
     $isMobileUserAgent() {
@@ -136,10 +140,10 @@ class $Exhibition {
     }
 
     /**
-     * @name NSBA
-     * @description 检查浏览器是否支持
+     * 检查浏览器是否支持
      *
-     * @param {string|null} alertHTML
+     * @param {string|null} alertHTML - 警告HTML
+     * @returns {void}
      */
     $nsba(alertHTML = null) {
         if (alertHTML == null) {
@@ -195,8 +199,7 @@ class $Exhibition {
     }
 
     /**
-     * @name loadScence
-     * @description 加载场景
+     * 加载场景
      * @async
      * @returns Promise<error|null>
      */
@@ -274,8 +277,7 @@ class $Exhibition {
     }
 
     /**
-     * @name loadModelGLTF
-     * @description 加载GLTF模型
+     * 加载GLTF模型
      * @param {string} modelURL
      * @param {function} finish
      * @param {function} progress
@@ -305,6 +307,10 @@ class $Exhibition {
         );
     }
 
+    /**
+     * 移动时边界检测
+     * @private
+     */
     $checkBoundaries() {
         const position = this.camera.position;
         if (
@@ -328,98 +334,6 @@ class $Exhibition {
     $startAnimate() {
         this.$animate();
     }
-}
-
-class _Config {
-    /**
-     *
-     * @param {string} configURL 配置文件的URL
-     * @param {Array|null} protectKeyList 被保护的键列表
-     * @param {Array|null} readOnlyKeyList 只读的键列表
-     */
-    constructor(configURL, protectKeyList, readOnlyKeyList) {
-        this.configURL = configURL;
-        this.protectKeyList = protectKeyList === undefined ? new Array() : protectKeyList;
-        this.readOnlyKeyList = readOnlyKeyList === undefined ? new Array() : readOnlyKeyList;
-        this.loaded = 0;
-        this.config = {};
-    }
-
-    /**
-     * @name loadConfig
-     * @description 加载配置文件
-     *
-     * @returns {Promise<error|object>}
-     * @async
-     */
-    loadConfig() {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            try {
-                let xhr = new XMLHttpRequest();
-                // 第二步: 调用open函数 指定请求方式 与URL地址
-                xhr.open("GET", self.configURL, true);
-                xhr.setRequestHeader("If-Modified-Since", "0");
-                // 第三步: 调用send函数 发起ajax请求
-                xhr.send();
-                // 第四步: 监听onreadystatechange事件
-                xhr.onreadystatechange = function () {
-                    // 监听xhr对象的请求状态 与服务器的响应状态
-                    if (this.readyState == 4 && this.status == 200) {
-                        // 如果响应就绪的话,就创建表格(拿到了服务器响应回来的数据xhr.responseText)
-                        var config = JSON.parse(this.response);
-                        self.loaded = 1;
-                        resolve(config);
-                    }
-                };
-            } catch (error) {
-                console.error(error);
-                reject(error);
-            }
-        });
-    }
-
-    /**
-     * @name initConfig
-     * @param {object} config
-     */
-    initConfig(config) {
-        this.config = config;
-    }
-
-    /**
-     * @name getValue
-     *
-     * @param {string} key
-     * @static
-     * @public
-     */
-
-    getValue(key) {
-        if (!(this.protectKeyList.includes(key) || this.readOnlyKeyList.includes(key))) {
-            return this.config[key];
-        } else {
-            console.warn("An attempt to access a protected key " + key.toString() + ".");
-            return null;
-        }
-    }
-
-    /**
-     * @name setValue
-     *
-     * @param {string} key
-     * @param {string} value
-     * @static
-     * @public
-     */
-    setValue(key, value) {
-        if (this.protectKeyList.includes(key)) {
-            console.error("An attempt to modify a protected key " + key.toString() + ".");
-            return null;
-        }
-        this.config[key] = value;
-    }
-    //test
 }
 
 export { $Exhibition };
