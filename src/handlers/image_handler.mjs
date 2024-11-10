@@ -114,7 +114,7 @@ class Screen {
         // console.log(this.uuid,"Painting")
         var cnt = this.pointer;
         var context = this.canvas.getContext("2d");
-        context.fillStyle = "#c7e8ff";
+        context.fillStyle = this.config.backgroundColor;
         // console.log(this.picmeta[cnt]);
         context.fillRect(0, 0, this.cavdata[0], this.cavdata[1]);
         context.drawImage(
@@ -129,7 +129,7 @@ class Screen {
             (this.cavdata[1] - this.padding) * (this.picmeta[cnt].file.width / this.picmeta[cnt].file.height),
             this.cavdata[1] - this.padding
         );
-        context.fillStyle = "black";
+        context.fillStyle = this.config.text.font.color;
         var display = "";
         this.config.info.forEach(element => {
             display +=
@@ -138,8 +138,13 @@ class Screen {
                 unescape(this.picmeta[cnt]["info"][element.key] || element.default) +
                 " ";
         });
-        context.font = "30px Simihei";
-        context.fillText(display, 50, this.cavdata[1] - 20, this.cavdata[0]);
+        context.font = this.config.text.font.size + " " + this.config.text.font.famliy;
+        context.fillText(
+            display,
+            this.config.text.position.x,
+            this.cavdata[1] - this.config.text.position.down - padding,
+            this.cavdata[0]
+        );
         this.pointer++;
         if (this.pointer >= this.picmeta.length) {
             this.pointer = 0;
