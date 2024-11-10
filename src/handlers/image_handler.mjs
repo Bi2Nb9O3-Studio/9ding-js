@@ -3,7 +3,7 @@ import { Handler } from "./handler.mjs";
 import Utils from "../utils.mjs";
 // import * as EXT from "../main.mjs";
 class Screen {
-    constructor(scene, cavdata, objdata, scale = 0.001, picmeta, config, backendurl, padding=80) {
+    constructor(scene, cavdata, objdata, scale = 0.001, picmeta, config, backendurl, padding = 80) {
         /**
          * @description 缩放大小(px=>米)
          * @private
@@ -132,7 +132,11 @@ class Screen {
         context.fillStyle = "black";
         var display = "";
         this.config.info.forEach(element => {
-            display += unescape(element.display) + ":" + unescape(this.picmeta[cnt]['info'][element.key] || element.default) + " ";
+            display +=
+                unescape(element.display) +
+                ":" +
+                unescape(this.picmeta[cnt]["info"][element.key] || element.default) +
+                " ";
         });
         context.font = "30px Simihei";
         context.fillText(display, 50, this.cavdata[1] - 20, this.cavdata[0]);

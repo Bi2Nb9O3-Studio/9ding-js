@@ -1,10 +1,10 @@
 /** 处理器基类 */
-export class Handler{
+export class Handler {
     /**
      * @constructor
      * @abstract
      */
-    constructor() { }
+    constructor() {}
     /**
      * handler被触发时
      * @abstract
@@ -12,5 +12,5 @@ export class Handler{
      */
     entry() {
         return new Promise();
-     }
+    }
 }

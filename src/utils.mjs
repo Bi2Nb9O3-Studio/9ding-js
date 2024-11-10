@@ -53,4 +53,4 @@ function success(msg) {
     }).showToast();
 }
 
-export default {getUuid, failed, success};
+export default { getUuid, failed, success };
