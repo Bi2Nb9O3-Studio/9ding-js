@@ -1,10 +1,10 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 import * as THREE from "three";
-import "toastify-js/src/toastify.css";
-import "toastify-js";
+import Utils from "./utils.mjs";
 import Stats from "three/addons/libs/stats.module.js";
 import { _Config } from "./config.mjs";
+import ImageHandler from "./handlers/image_handler.mjs";
 
 /** Class represents a exhibition. */
 class $Exhibition {
@@ -28,6 +28,7 @@ class $Exhibition {
             requestAnimationFrame(this.$animate);
         };
         this.keypressed;
+        this.handlers = [];
     }
 
     /**
@@ -40,44 +41,35 @@ class $Exhibition {
         this.config
             .loadConfig()
             .then(config => {
-                Toastify({
-                    className: "info",
-                    text: "加载配置文件成功!",
-                    duration: 3000,
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)"
-                    },
-                    position: "center"
-                }).showToast();
+                Utils.success("加载配置文件成功!");
                 this.config.initConfig(config);
                 this.loadScence()
                     .then(_ => {
                         this.$startAnimate();
                         this.$startMotionCheck();
-                        console.log("加载场景成功!");
+                        this.config.getValue("handlers").forEach(element => {
+                            switch (element.type) {
+                                case "image":
+                                    this.handlers.push(new ImageHandler(element.backendurl, this));
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        });
+                        this.handlers.forEach(element => {
+                            element.init();
+                        });
+                        // console.log("加载场景成功!");
                     })
                     .catch(error => {
-                        Toastify({
-                            className: "error",
-                            text: "加载场景失败! " + error,
-                            duration: 3000,
-                            style: {
-                                background: "linear-gradient(to right, #FF416C, #FF4B2B)"
-                            },
-                            position: "center"
-                        }).showToast();
+                        Utils.failed("加载场景失败! " + error);
+                        // console.log(this.config.config);
+                        throw error;
                     });
             })
             .catch(error => {
-                Toastify({
-                    className: "error",
-                    text: "加载配置文件失败!",
-                    duration: 3000,
-                    style: {
-                        background: "linear-gradient(to right, #FF416C, #FF4B2B)"
-                    },
-                    position: "center"
-                }).showToast();
+                Utils.failed("加载配置文件失败!");
             });
     }
 
@@ -237,15 +229,7 @@ class $Exhibition {
                 this.renderer.setSize(this.canvasElement.clientWidth, this.canvasElement.clientHeight);
 
                 this.$loadModelGLTF(this.config.getValue("modelURL"), _ => {
-                    Toastify({
-                        className: "info",
-                        text: "加载模型文件成功!",
-                        duration: 3000,
-                        style: {
-                            background: "linear-gradient(to right, #00b09b, #96c93d)"
-                        },
-                        position: "center"
-                    }).showToast();
+                    Utils.success("加载模型文件成功!");
                 });
 
                 this.controls = new PointerLockControls(this.camera, this.canvasElement);

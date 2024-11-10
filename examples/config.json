@@ -18,5 +18,6 @@
     },
     "modelURL": "../Deprecated/static/model/model.glb",
     "divElementID": "cav",
-    "moveDistance": 0.05
+    "moveDistance": 0.05,
+    "backendurl":""
 }
