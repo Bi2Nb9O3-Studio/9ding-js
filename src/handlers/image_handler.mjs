@@ -139,13 +139,8 @@ class Screen {
                 " ";
         });
         console.log(display);
-        context.font = this.padding-5 + "px " + this.config.text.font.famliy;
-        context.fillText(
-            display,
-            this.config.text.position.x,
-            this.cavdata[1],
-            this.cavdata[0]
-        );
+        context.font = this.padding - 5 + "px " + this.config.text.font.famliy;
+        context.fillText(display, this.config.text.position.x, this.cavdata[1], this.cavdata[0]);
         this.pointer++;
         if (this.pointer >= this.picmeta.length) {
             this.pointer = 0;
@@ -204,7 +199,7 @@ export default class ImageHandler extends Handler {
                             }
                         ];
                     }
-                    for (;this.meta.length < this.config.screens.length;){
+                    for (; this.meta.length < this.config.screens.length; ) {
                         this.meta = [...this.meta, ...this.meta];
                     }
                     var ppc = Math.floor(this.meta.length / this.config.screens.length);
@@ -220,7 +215,7 @@ export default class ImageHandler extends Handler {
                                 this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)),
                                 this.config,
                                 this.backendurl,
-                                this.config.text.position['down-padding']
+                                this.config.text.position["down-padding"]
                             )
                         );
                         //console.log(header, header + ppc + (err > 0 ? 1 : 0));
