@@ -138,11 +138,12 @@ class Screen {
                 unescape(this.picmeta[cnt]["info"][element.key] || element.default) +
                 " ";
         });
-        context.font = this.config.text.font.size + " " + this.config.text.font.famliy;
+        console.log(display);
+        context.font = this.padding-5 + "px " + this.config.text.font.famliy;
         context.fillText(
             display,
             this.config.text.position.x,
-            this.cavdata[1] - this.config.text.position.down - padding,
+            this.cavdata[1],
             this.cavdata[0]
         );
         this.pointer++;
@@ -172,7 +173,8 @@ export default class ImageHandler extends Handler {
          * @description 后端接口地址
          * @type {URL}
          */
-        this.backendurl = new URL(backendurl, window.location.protocol + "//" + window.location.host + "/");
+        // this.backendurl = new URL(backendurl, window.location.protocol + "//" + window.location.host + "/");
+        this.backendurl = new URL(backendurl);
         this.meta = [];
         this.exhibition = exhibition;
         this.screens = [];
@@ -189,6 +191,22 @@ export default class ImageHandler extends Handler {
                 this.loadConfig().then(config => {
                     Utils.success("加载图像配置文件成功!");
                     this.config = config;
+                    if (this.meta.length == 0) {
+                        this.meta = [
+                            {
+                                url: "./content/empty",
+                                info: {
+                                    stu_name: "无数据",
+                                    category: "无数据",
+                                    work_name: "无数据",
+                                    teacher: "无数据"
+                                }
+                            }
+                        ];
+                    }
+                    for (;this.meta.length < this.config.screens.length;){
+                        this.meta = [...this.meta, ...this.meta];
+                    }
                     var ppc = Math.floor(this.meta.length / this.config.screens.length);
                     var err = this.meta.lenght % this.config.screens.length;
                     var header = 0;
@@ -202,7 +220,7 @@ export default class ImageHandler extends Handler {
                                 this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)),
                                 this.config,
                                 this.backendurl,
-                                undefined
+                                this.config.text.position['down-padding']
                             )
                         );
                         //console.log(header, header + ppc + (err > 0 ? 1 : 0));
@@ -228,7 +246,7 @@ export default class ImageHandler extends Handler {
     loadInfo() {
         return new Promise((resolve, reject) => {
             debugger;
-            fetch(new URL("./metadata.json", this.backendurl.toString()))
+            fetch(new URL("./metadata", this.backendurl.toString()))
                 .then(response => {
                     if (response.ok) {
                         resolve(response.json());
@@ -248,7 +266,7 @@ export default class ImageHandler extends Handler {
      */
     loadConfig() {
         return new Promise((resolve, reject) => {
-            fetch(new URL("./config.json", this.backendurl.toString()))
+            fetch(new URL("./config", this.backendurl.toString()))
                 .then(response => {
                     if (response.ok) {
                         resolve(response.json());
