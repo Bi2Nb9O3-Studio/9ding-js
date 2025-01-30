@@ -114,7 +114,7 @@ class Screen {
         // console.log(this.uuid,"Painting")
         var cnt = this.pointer;
         var context = this.canvas.getContext("2d");
-        context.fillStyle = "#c7e8ff";
+        context.fillStyle = this.config.backgroundColor;
         // console.log(this.picmeta[cnt]);
         context.fillRect(0, 0, this.cavdata[0], this.cavdata[1]);
         context.drawImage(
@@ -129,7 +129,7 @@ class Screen {
             (this.cavdata[1] - this.padding) * (this.picmeta[cnt].file.width / this.picmeta[cnt].file.height),
             this.cavdata[1] - this.padding
         );
-        context.fillStyle = "black";
+        context.fillStyle = this.config.text.font.color;
         var display = "";
         this.config.info.forEach(element => {
             display +=
@@ -138,8 +138,14 @@ class Screen {
                 unescape(this.picmeta[cnt]["info"][element.key] || element.default) +
                 " ";
         });
-        context.font = "30px Simihei";
-        context.fillText(display, 50, this.cavdata[1] - 20, this.cavdata[0]);
+        console.log(display);
+        context.font = this.padding - 5 + "px " + this.config.text.font.family;
+        context.fillText(
+            display,
+            this.config.text.position.x,
+            this.cavdata[1] - 10,
+            this.cavdata[0] - this.config.text.position.x
+        );
         this.pointer++;
         if (this.pointer >= this.picmeta.length) {
             this.pointer = 0;
@@ -167,7 +173,8 @@ export default class ImageHandler extends Handler {
          * @description 后端接口地址
          * @type {URL}
          */
-        this.backendurl = new URL(backendurl, window.location.protocol + "//" + window.location.host + "/");
+        // this.backendurl = new URL(backendurl, window.location.protocol + "//" + window.location.host + "/");
+        this.backendurl = new URL(backendurl);
         this.meta = [];
         this.exhibition = exhibition;
         this.screens = [];
@@ -184,6 +191,22 @@ export default class ImageHandler extends Handler {
                 this.loadConfig().then(config => {
                     Utils.success("加载图像配置文件成功!");
                     this.config = config;
+                    if (this.meta.length == 0) {
+                        this.meta = [
+                            {
+                                url: "./content/empty",
+                                info: {
+                                    stu_name: "无数据",
+                                    category: "无数据",
+                                    work_name: "无数据",
+                                    teacher: "无数据"
+                                }
+                            }
+                        ];
+                    }
+                    for (; this.meta.length < this.config.screens.length; ) {
+                        this.meta = [...this.meta, ...this.meta];
+                    }
                     var ppc = Math.floor(this.meta.length / this.config.screens.length);
                     var err = this.meta.lenght % this.config.screens.length;
                     var header = 0;
@@ -197,7 +220,7 @@ export default class ImageHandler extends Handler {
                                 this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)),
                                 this.config,
                                 this.backendurl,
-                                undefined
+                                this.config.text.position["down-padding"]
                             )
                         );
                         //console.log(header, header + ppc + (err > 0 ? 1 : 0));
@@ -223,7 +246,7 @@ export default class ImageHandler extends Handler {
     loadInfo() {
         return new Promise((resolve, reject) => {
             debugger;
-            fetch(new URL("./metadata.json", this.backendurl.toString()))
+            fetch(new URL("./metadata", this.backendurl.toString()))
                 .then(response => {
                     if (response.ok) {
                         resolve(response.json());
@@ -243,7 +266,7 @@ export default class ImageHandler extends Handler {
      */
     loadConfig() {
         return new Promise((resolve, reject) => {
-            fetch(new URL("./config.json", this.backendurl.toString()))
+            fetch(new URL("./config", this.backendurl.toString()))
                 .then(response => {
                     if (response.ok) {
                         resolve(response.json());
