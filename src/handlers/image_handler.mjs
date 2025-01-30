@@ -139,8 +139,13 @@ class Screen {
                 " ";
         });
         console.log(display);
-        context.font = this.padding - 5 + "px " + this.config.text.font.famliy;
-        context.fillText(display, this.config.text.position.x, this.cavdata[1], this.cavdata[0]);
+        context.font = this.padding - 5 + "px " + this.config.text.font.family;
+        context.fillText(
+            display,
+            this.config.text.position.x,
+            this.cavdata[1] - 10,
+            this.cavdata[0] - this.config.text.position.x
+        );
         this.pointer++;
         if (this.pointer >= this.picmeta.length) {
             this.pointer = 0;
