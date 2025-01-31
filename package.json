@@ -1,6 +1,6 @@
 {
     "name": "9ding-js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "An useful exhibition script for javascript.",
     "directories": {
         "example": "examples"
