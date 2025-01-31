@@ -36,7 +36,7 @@ jobs:
               with:
                   name: build
             #unzip
-            - run : unzip build.zip -d build
+            - run: unzip build.zip -d build
             - name: Create a Release
               id: create_release
               uses: actions/create-release@v1
