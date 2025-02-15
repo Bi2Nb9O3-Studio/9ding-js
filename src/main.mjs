@@ -201,8 +201,8 @@ class $Exhibition {
                 this.scene = new THREE.Scene();
                 this.divEle = document.getElementById(this.config.getValue("divElementID"));
                 this.canvasElement = document.createElement("canvas");
-                this.canvasElement.style.width = "100%";
-                this.canvasElement.style.height = "100%";
+                this.canvasElement.style.width = "100vw";
+                this.canvasElement.style.height = "100vh";
                 // this.canvasElement.style.margin = "0";
                 this.divEle.appendChild(this.canvasElement);
                 this.camera = new THREE.PerspectiveCamera(
