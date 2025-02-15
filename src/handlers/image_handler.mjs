@@ -3,7 +3,7 @@ import { Handler } from "./handler.mjs";
 import Utils from "../utils.mjs";
 // import * as EXT from "../main.mjs";
 class Screen {
-    constructor(scene, cavdata, objdata, scale = 0.001, picmeta, config, backendurl, padding = 80) {
+    constructor(scene, cavdata, objdata, scale = 0.001, picmeta, config, backendurl, padding = 80, counter) {
         /**
          * @description 缩放大小(px=>米)
          * @private
@@ -42,6 +42,7 @@ class Screen {
         this.config = config;
         this.backendurl = backendurl;
         this.padding = padding;
+        this.counter = counter;
     }
 
     /**
@@ -56,6 +57,7 @@ class Screen {
             var file = new Image();
             file.src = new URL(element.url, this.backendurl.toString());
             file.onload = () => {
+                this.counter.increase();
                 that.loadedcnt++;
                 //console.log("Loaded", that.loadedcnt, "/", that.picmeta.length);
             };
@@ -178,6 +180,17 @@ export default class ImageHandler extends Handler {
         this.meta = [];
         this.exhibition = exhibition;
         this.screens = [];
+        this.counter_name = "Painter";
+        this.counter.onIncrease = (count, total) => {
+            document.getElementById("picloadingtext").innerText = (count / total).toFixed(4) * 100 + "%";
+            document
+                .getElementById("picloading")
+                .style.setProperty("--progress", (count / total).toFixed(4) * 100 + "%");
+        };
+        this.counter.onFinish = (count, total) => {
+            document.getElementById("picloadingtext").innerText = "100%";
+            document.getElementById("picloading").style.setProperty("--progress", "100%");
+        };
     }
 
     /**
@@ -207,8 +220,9 @@ export default class ImageHandler extends Handler {
                     for (; this.meta.length < this.config.screens.length; ) {
                         this.meta = [...this.meta, ...this.meta];
                     }
+                    this.counter.setTotal(this.meta.length);
                     var ppc = Math.floor(this.meta.length / this.config.screens.length);
-                    var err = this.meta.lenght % this.config.screens.length;
+                    var err = this.meta.length % this.config.screens.length;
                     var header = 0;
                     this.config.screens.forEach(element => {
                         this.screens.push(
@@ -220,9 +234,11 @@ export default class ImageHandler extends Handler {
                                 this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)),
                                 this.config,
                                 this.backendurl,
-                                this.config.text.position["down-padding"]
+                                this.config.text.position["down-padding"],
+                                this.counter
                             )
                         );
+                        console.log(this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)));
                         //console.log(header, header + ppc + (err > 0 ? 1 : 0));
                         if (err > 0) {
                             err--;

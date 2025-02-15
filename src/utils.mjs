@@ -53,4 +53,34 @@ function success(msg) {
     }).showToast();
 }
 
-export default { getUuid, failed, success };
+function createCounter() {
+    return {
+        total: 0,
+        count: 0,
+        onIncrease: function (count, total) {},
+        onFinish: function (count, total) {},
+        increase() {
+            this.count++;
+            if (this.isDone()) {
+                this.onFinish(this.count, this.total);
+                return;
+            }
+            this.onIncrease(this.count, this.total);
+        },
+        decrease() {
+            this.count--;
+        },
+        reset() {
+            this.count = 0;
+        },
+        isDone() {
+            return this.count >= this.total;
+        },
+        setTotal(total) {
+            this.total = total;
+            return this.count;
+        }
+    };
+}
+
+export default { getUuid, failed, success, createCounter };

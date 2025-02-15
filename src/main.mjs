@@ -5,6 +5,7 @@ import Utils from "./utils.mjs";
 import Stats from "three/addons/libs/stats.module.js";
 import { _Config } from "./config.mjs";
 import ImageHandler from "./handlers/image_handler.mjs";
+import "./style.css";
 
 /** Class represents a exhibition. */
 class $Exhibition {
@@ -190,6 +191,76 @@ class $Exhibition {
         checkBrowserVersion(userAgent, /OPR\/(\d+)/, /OPR\/(\d+)/, 38, "Is Opera");
     }
 
+    setLoadingScreen() {
+        // <div id="loading" style="display: none">
+        // <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        //     <circle
+        //         class="path"
+        //         fill="none"
+        //         stroke-width="6"
+        //         stroke-linecap="round"
+        //         cx="33"
+        //         cy="33"
+        //         r="30"
+        //     ></circle>
+        // </svg>
+        // <div id="loadingInfo"></div>
+        // <div id="modelloading" style="margin-top: 30px; --progress: 0%" class="g-progress">
+        //     <span class="leftText">模型加载</span>
+        //     <span class="rightText" id="modelloadingtext">
+        //         0%
+        //     </span>
+        // </div>
+        // <div id="picloading" style="--progress: 0%" class="g-progress">
+        //     <span class="leftText">图片加载</span>
+        //     <span class="rightText" id="picloadingtext">
+        //         0%
+        //     </span>
+        // </div>
+        // <div id="domloading" style="margin-top: 10px">
+        //     DOMContent....
+        //     <span id="domloadingtext" style="color: red">
+        //         x
+        //     </span>
+        // </div>
+        // </div>;
+        //create
+        this.loadingScreen = document.createElement("div");
+        this.loadingScreen.id = "loading";
+        this.divEle.appendChild(this.loadingScreen);
+        this.loadingScreen.innerHTML = `
+        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                <circle
+                    class="path"
+                    fill="none"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                    cx="33"
+                    cy="33"
+                    r="30"
+                ></circle>
+            </svg>
+            <div id="loadingInfo"></div>
+            <div id="modelloading" style="margin-top: 30px; --progress: 0%" class="g-progress">
+                <span class="leftText">模型加载</span>
+                <span class="rightText" id="modelloadingtext">
+                    0%
+                </span>
+            </div>
+            <div id="picloading" style="--progress: 0%" class="g-progress">
+                <span class="leftText">图片加载</span>
+                <span class="rightText" id="picloadingtext">
+                    0%
+                </span>
+            </div>
+        `;
+        let timer = setInterval(() => {
+            if(parseInt(document.getElementById("modelloadingtext").innerText) == 100 && document.getElementById("picloadingtext").innerText == "100%"){
+                clearInterval(timer);
+                document.getElementById("loading").style.display = "none";
+            }
+        }, 200);
+    }
     /**
      * 加载场景
      * @async
@@ -200,6 +271,7 @@ class $Exhibition {
             try {
                 this.scene = new THREE.Scene();
                 this.divEle = document.getElementById(this.config.getValue("divElementID"));
+                this.setLoadingScreen();
                 this.canvasElement = document.createElement("canvas");
                 this.canvasElement.style.width = "100vw";
                 this.canvasElement.style.height = "100vh";
@@ -228,9 +300,23 @@ class $Exhibition {
                 };
                 this.renderer.setSize(this.canvasElement.clientWidth, this.canvasElement.clientHeight);
 
-                this.$loadModelGLTF(this.config.getValue("modelURL"), _ => {
-                    Utils.success("加载模型文件成功!");
-                });
+                this.$loadModelGLTF(
+                    this.config.getValue("modelURL"),
+                    _ => {
+                        Utils.success("加载模型文件成功!");
+                        document.getElementById("modelloading").style.setProperty("--progress", "100%");
+                    },
+                    xhr => {
+                        document
+                            .getElementById("modelloading")
+                            .style.setProperty("--progress", (xhr.loaded / xhr.total) * 100 + "%");
+                        document.getElementById("modelloadingtext").innerText =
+                            Math.floor((xhr.loaded / xhr.total) * 100) + "%";
+                    },
+                    error => {
+                        Utils.failed("加载模型文件失败! " + error);
+                    }
+                );
 
                 this.controls = new PointerLockControls(this.camera, this.canvasElement);
 
