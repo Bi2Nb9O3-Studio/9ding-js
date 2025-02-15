@@ -255,7 +255,10 @@ class $Exhibition {
             </div>
         `;
         let timer = setInterval(() => {
-            if(parseInt(document.getElementById("modelloadingtext").innerText) == 100 && document.getElementById("picloadingtext").innerText == "100%"){
+            if (
+                parseInt(document.getElementById("modelloadingtext").innerText) == 100 &&
+                document.getElementById("picloadingtext").innerText == "100%"
+            ) {
                 clearInterval(timer);
                 document.getElementById("loading").style.display = "none";
             }
