@@ -140,7 +140,7 @@ class Screen {
                 unescape(this.picmeta[cnt]["info"][element.key] || element.default) +
                 " ";
         });
-        console.log(display);
+        // console.log(display);
         context.font = this.padding - 5 + "px " + this.config.text.font.family;
         context.fillText(
             display,
@@ -238,7 +238,7 @@ export default class ImageHandler extends Handler {
                                 this.counter
                             )
                         );
-                        console.log(this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)));
+                        // console.log(this.meta.slice(header, header + ppc + (err > 0 ? 1 : 0)));
                         //console.log(header, header + ppc + (err > 0 ? 1 : 0));
                         if (err > 0) {
                             err--;
